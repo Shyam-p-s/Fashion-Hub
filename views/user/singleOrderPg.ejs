@@ -1,0 +1,168 @@
+<!-- header section -->
+<%- include('partials/header') %>
+ <!-- header section -->
+
+<link rel="stylesheet" href="/user_assets/https://fonts.googleapis.com/css?family=Mukta:300,400,700"> 
+    <link rel="stylesheet" href="/user_assets/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="/user_assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user_assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/user_assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="/user_assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/user_assets/css/owl.theme.default.min.css">
+
+
+    <link rel="stylesheet" href="/user_assets/css/aos.css">
+
+    <link rel="stylesheet" href="/user_assets/css/style.css">
+
+
+ <div class="bg-light py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mb-0"><a href="/">Home</a> <span class="mx-2 mb-0">/</span><a href="/user/vieworders">Your orders</a> <span class="mx-2 mb-0">/</span>  <strong class="text-black">Order details</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .gradient-custom {
+    
+        background: #ffffff;
+       
+        background: -webkit-linear-gradient(to top left, rgb(255, 255, 255), rgb(255, 255, 255));
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to top left, rgb(255, 255, 255), rgb(255, 255, 255))
+    }
+</style>
+<div class="container" >
+    <section class="h-100 gradient-custom">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-10 col-xl-8">
+                    <div class="card" style="border-radius: 10px;">
+                        <div class="card-header px-4 py-5" style="height: 100px; background-color: rgb(22, 21, 21); display: flex; align-items: center; justify-content: space-between;">
+                            <h5 style="text-align: center; color: #ffffff; flex-grow: 1;" class="text-muted mb-0">
+                              Thanks for your Order, <span style="font-weight: bolder; font-size: 20px;"><%= user.name %></span>!
+                            </h5>
+                            
+                            <div style="text-align: right;">
+                                <% if(orders.status == 'Delivered'){%>
+                              <button class="btn btn-warning"><a href="/invoice/<%= orders._id %>" style="color: beige; font-weight: bolder;">Invoice</a></button>
+                              <%} %>
+                            </div>
+                          </div>
+                         
+                          
+                          
+                          
+                        <p class="small text-muted mb-0" style="margin-top: 50px; margin-left: 30px; font-weight: bold;" >Order Id: <%= orders._id %></p>
+                     
+                        <div class="card-body p-4">
+                     
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <p class="lead fw-normal mb-0" style="color: #c08888;">Receipt</p>
+                            
+
+                            </div>
+                        
+                          
+                        <% orderedProducts.forEach((product)=>{%>
+                                    <div class="card shadow-sm border-radius mb-4">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                
+                                                <div class="col-md-2 d-flex justify-content-center align-items-center" >
+                                                    <img style="height: 100px;" src="/<%= product.product.image %>" class="img-fluid" alt="img">
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center" style="margin-top: 28px; font-weight: bolder;" >
+                                                    <p class="text-muted mb-0 small">Product Name: <%= product.product.name %></p>
+                                                </div>
+                                                <!-- <div class="col-md-2 text-center d-flex justify-content-center align-items-center" style="margin-top: 28px; font-weight: bolder;" >
+                                                    <p class="text-muted mb-0 small">Brand<br>dsdd</p>
+                                                </div> -->
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center" style="margin-top: 28px; font-weight: bolder;" >
+                                                    <p class="text-muted mb-0 small">Qantity: <%= product.quantity %></p>
+                                                </div>
+                                                <div class="col-md-2 text-center d-flex justify-content-center align-items-center" style="margin-top: 28px; font-weight: bolder;" >
+                                                    <p class="text-muted mb-0 small">Price: ₹<%= product.product.price %></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <%}) %>
+                                
+                                    
+                               
+                                    
+                        </div>
+                        
+
+                   
+
+
+                    <div >
+                        <h4 style="margin-left: 30px;">Order Status: <span style="font-weight: bolder;"> <%= orders.status %> </span>  </h4>
+                    </div>
+                    <div class="container">
+                        <div class="d-flex justify-content-between pt-2  " style="display: flex;" >
+                            <div style="width: 50%;">
+                            <p class="fw-bold mb-0" style="margin-top: 50px;margin-left: 30px; font-size: larger;font-weight: bolder; color: black; ">Order Details</p>    
+                             </div>
+                        <div style="width: 50%; margin-top: 50px; margin-left: 320px;">
+                            <p class="text-muted mb-0"><span class="fw-bold me-4" style="font-weight: bold; color: rgba(31, 30, 30, 0.582);">Total :</span> ₹ <%= orders.total %></p>
+                        </div>
+                        </div>
+                       
+                     
+                    </div>
+                    
+                    <div class="d-flex justify-content-between pt-2">
+                                         
+                        <p class="text-muted mb-0" style="margin-left: 30px;">Delivery Address Details :</p>
+                        <p class="text-muted mb-0 " style="margin-left: 150px;"> 
+                           <div> 
+                             <p> Name: <%= orders.address.name %> </p>
+                             <p>City: <%= orders.address.city %></p>
+                              <p>State: <%= orders.address.state %></p>
+                               <p> Zip: <%= orders.address.pincode %> </p>
+                                <p>Phone: <%= orders.address.phone %></p>
+                            </div> 
+                            
+                        </p>
+                    </div>
+                    <div class="card-footer border-0 px-4 py-5"
+                    style="background-color: #111111; border-bottom-left-radius: 10px; height: 60px; display: flex; justify-content: flex-end; align-items: center;">
+                  
+                   <h3 class="text-white text-uppercase mb-0" style="color: beige;">
+                       Total Amount:&nbsp;&nbsp;&nbsp;<span class="h2 mb-0 ms-2">₹ <%= orders.total %></span>
+                   </h3>
+               </div>
+             
+                </div>
+              
+            </div>
+         
+        </div>
+    
+</div>
+</section>
+</div>
+
+   <!-- footer session -->
+<%- include('partials/footer') %>
+<!-- footer session -->
+
+
+
+<script src="/user_assets/js/jquery-3.3.1.min.js"></script>
+<script src="/user_assets/js/jquery-ui.js"></script>
+<script src="/user_assets/js/popper.min.js"></script>
+<script src="/user_assets/js/bootstrap.min.js"></script>
+<script src="/user_assets/js/owl.carousel.min.js"></script>
+<script src="/user_assets/js/jquery.magnific-popup.min.js"></script>
+<script src="/user_assets/js/aos.js"></script>
+
+<script src="/user_assets/js/main.js"></script>
+</body>
+</html>

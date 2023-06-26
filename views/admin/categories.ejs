@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar') %>
+<div class="content">
+    <%- include('partials/navbar') %>
+
+
+    <!-- categories -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Products</h6>
+                <a class="btn btn-sm btn-primary mt-3 " href="/addCategory">Add Category</a>
+                <a href="">Show All</a>
+            </div>
+            <% if (locals.msg) { %>
+                <div class="alert alert-danger" role="alert" id="alert" >
+                    <%= msg %>
+                </div> 
+                <%}%>
+            <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">Sl.No</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <% categories.forEach((category,index)=>{%>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= category.category  %></td>
+                            <td><%= category.description %></td>
+                            <td>
+                               
+                                    <a href="/update_category/<%= category._id%>" class="btn border-shadow update">
+                                        <span class="text-gradient"><i class="fas fa-pencil-alt" title="update Category"></i></span>
+                                    </a>
+                            
+                                <a href="/delete_category/<%= category._id%>"
+                                    class="btn border-shadow delete"  onClick=" return confirm('Do you want to delete ?')" title="Delete Category">
+                                    <span class="text-gradient">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                </a>
+                               
+                            </td>
+                        </tr>
+                        <%})%>
+                           
+                       
+                        
+                        
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+    <!-- categories  -->
+
+
+   
+
+   
+</div>
+<!-- Content End -->
+
+<script>
+    setTimeout(()=>{
+        document.getElementById("alert").style.display = "none";
+    },2000)
+ </script>
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="admin_assets/lib/chart/chart.min.js"></script>
+<script src="admin_assets/lib/easing/easing.min.js"></script>
+<script src="admin_assets/lib/waypoints/waypoints.min.js"></script>
+<script src="admin_assets/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="admin_assets/lib/tempusdominus/js/moment.min.js"></script>
+<script src="admin_assets/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="admin_assets/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="admin_assets/js/main.js"></script>
+</body>

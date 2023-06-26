@@ -1,0 +1,153 @@
+<!-- header section -->
+<%- include('partials/header') %>
+ <!-- header section -->
+
+ <!-- toastify -->
+ <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
+ <div class="bg-light py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mb-0"><a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Wishlist</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-section">
+    <div class="container">
+            <div class="row mb-5">
+                <form class="col-md-12" method="post">
+                <div class="site-blocks-table">
+                    <% if(!locals.userWishlist || userWishlist.length == 0){%>
+                        <div class="container center">
+                            <h2 style="text-align: center;">Your Shopping Wishlist is Empty</h2>
+                            <div style="width: 200px; margin: 0 auto;">
+                                <a class="btn btn-primary btn-sm text-light d-flex justify-content-center" href="/" role="button">Return Home</a>
+                              </div>
+
+                          </div>
+                        <%}else{%>
+                            
+                        
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                        <th class="product-thumbnail">Image</th>
+                        <th class="product-name">Product</th>
+                        <th class="product-price">Price</th>
+                        
+                        
+                        <th class="product-remove">Remove</th>
+                        <th class="product-purchase">Purchase</th>
+                        </tr>
+                    </thead>
+
+                    <% userWishlist.reverse().forEach((products)=>{%> 
+                    <tbody>
+                    
+                          
+                        <tr>
+                        <td class="product-thumbnail">
+                            <img src="/<%= products.image %>" alt="Image" class="img-thumbnail" width="70px">
+                        </td>
+                        <td class="product-name">
+                            <h2 class="h5 text-black"><%= products.name %></h2>
+                        </td>
+                        <td><%= products.price %>₹</td>
+                        <td><a href="/deleteWishlistItem/<%=products._id %>" class="btn btn-primary btn-sm" onclick="confirmdelete(event)"  title="Remove ">X</a></td>
+                        <td><a href="" class="btn btn-primary btn-sm" title="Add to cart" onclick="addToCart(event,'<%=products._id %> ')"><span class="icon icon-shopping_cart" ></span></a></td>
+                        </tr>
+
+                
+                    </tbody>
+                    <%})  %>  
+                    </table>
+                    <%} %>
+                </div>
+                </form>
+            </div>
+    </div>
+   </div>
+
+   <!-- footer session -->
+<%- include('partials/footer') %>
+<!-- footer session -->
+
+<script src="user_assets/js/jquery-3.3.1.min.js"></script>
+<script src="user_assets/js/jquery-ui.js"></script>
+<script src="user_assets/js/popper.min.js"></script>
+<script src="user_assets/js/bootstrap.min.js"></script>
+<script src="user_assets/js/owl.carousel.min.js"></script>
+<script src="user_assets/js/jquery.magnific-popup.min.js"></script>
+<script src="user_assets/js/aos.js"></script>
+
+<script src="user_assets/js/main.js"></script>
+<!-- toastify -->
+<script>
+    function showToast() {
+         Toastify({
+             text: 'Product added to cart',
+             duration: 3000, // Duration in milliseconds
+             gravity: 'top', // Display position
+             position: 'right', // Display position
+             backgroundColor: '#ff6f00', // Toast background color
+             stopOnFocus: true, // Stop timer when the toast is hovered
+         }).showToast();
+         }
+function addToCart (event, productId) {
+   event.preventDefault();
+    
+   // Make an AJAX request to the server
+   var xhr = new XMLHttpRequest();
+   xhr.open('GET', `/addToCart/${productId}`, true);
+   xhr.onreadystatechange = function() {
+     if (xhr.readyState === 4 && xhr.status === 200) {
+     // Display the success toast or SweetAlert here
+     showToast() 
+     }
+   };
+   xhr.send();
+   };
+ 
+ </script>
+
+ 
+     <!-- sweet alert -->
+     <script>
+
+
+      function confirmdelete(event) {
+      event.preventDefault(); // Prevent the link from immediately navigating
+    
+      swal({
+        title: "Do you really want to remove the item?",
+        icon: "warning",
+        buttons: {
+          cancel: "No",
+          confirm: "Yes"
+        },
+      }).then((confirmed) => {
+        if (confirmed) {
+          swal({
+            title: "Item deleted successfully!",
+            icon: "success",
+          }).then(() => {
+            window.location.href = event.target.href; // Navigate to the block_pdt URL
+          });
+        }
+      });
+    }
+    </script>
+
+    <!-- sweet alert -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" ></script>
+
+ 
+   <!-- toastify -->
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+     <!-- toastify -->
+  
+</body>
+</html>

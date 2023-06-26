@@ -1,0 +1,76 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar') %>
+<div class="content">
+    <%- include('partials/navbar') %>
+
+
+     <!-- users -->
+     <div class="container-fluid pt-4 px-4">
+        <div class="bg-light text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Users</h6>
+                
+                <a href="">Show All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                    <thead>
+                        <tr class="text-dark">
+                            <th scope="col">Sl.No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone number</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <% userdata.forEach((users,index)=>{%>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= users.name %></td>
+                            <td><%= users.email %></td>
+                            <td><%= users.phone %></td>
+                            <td>
+                               <% if(users.isBlocked){%>
+                                <a class="btn btn-success" href="/unblock_user/<%= users._id %>" role="button">Unblock</a>
+                                <%}
+                                else{%>
+                                    <a class="btn btn-danger" href="/block_user/<%= users._id %>" role="button">Block</a>
+                                    <%}
+                                %>
+                            </td>
+                        </tr>
+                        <%})  %> 
+                           
+                        
+                        
+                        
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+     </div>
+    
+
+    </div>
+    <!-- Content End -->
+    
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="admin_assets/lib/chart/chart.min.js"></script>
+    <script src="admin_assets/lib/easing/easing.min.js"></script>
+    <script src="admin_assets/lib/waypoints/waypoints.min.js"></script>
+    <script src="admin_assets/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="admin_assets/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="admin_assets/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="admin_assets/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    
+    <!-- Template Javascript -->
+    <script src="admin_assets/js/main.js"></script>
+    </body>

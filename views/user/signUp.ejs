@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up Form by Colorlib</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="user_loginAssets/fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="user_loginAssets/css/style.css">
+</head>
+<body>
+
+    <div class="main">
+
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        
+                        <h2 class="form-title">Sign up</h2>
+                        <% if (locals.message) { %>
+                            <div class="alert alert-danger" role="alert" id="alert" >
+                                <%= message %>
+                            </div>        
+                                <% } %>
+                        <form method="POST" class="register-form" id="register-form" onsubmit="return submitform()">
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="name" id="name" placeholder="Your Name" onkeyup=" return validateName()" required/>
+                               
+                            </div>
+                            <span class="text-danger mb-3" id="nameError" style="color: red;"></span>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="email" placeholder="Your Email" onkeyup="return validateEmail()" required/>
+                            </div>
+                            <span class="text-danger mb-3" id="emailError" style="color: red;"></span>
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-smartphone-android"></i></label>
+                                <input type="tel" name="phone" id="phone" placeholder="Your Mobile Number" maxlength="10" onkeyup=" return validatephone()" required/>
+                            </div>
+                            <span class="text-danger mb-3" id="phoneError" style="color: red;"></span>
+                            <div class="form-group">
+                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="password" id="pass" placeholder="Password" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="repeatpassword" id="re_pass" placeholder="Repeat your password" onkeyup="return validatePassword()" required/>
+                            </div>
+                            <span class="text-danger mb-3" id="passwordError" style="color: red;"></span>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="user_loginAssets/images/signup-image.jpg" alt="sing up image"></figure>
+                        <a href="/login" class="signup-image-link">I am already member</a>
+                        <a href="/" class="signup-image-link">Home</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    </div>
+
+    <script>
+        function validateName(){
+            var nameInput = document.getElementById('name');
+            var nameError = document.getElementById('nameError');
+            var name = nameInput.value.trim();
+            if(name == ""){
+        
+                nameError.innerHTML = "Must carry a Name"
+                return false;
+
+            }
+            if(!/^[A-Z][a-zA-Z]*$/.test(name)){
+                nameError.innerHTML = "Name should start with a capital letter and contain only letters"
+                return false
+            }else{
+                // nameError.innerHTML = "<span style = 'color : green'> ✓</span>"
+                nameError.innerHTML = ""
+                return true;
+            }
+        }
+
+        function validateEmail(){
+            var emailInput = document.getElementById('email');
+            var emailError = document.getElementById('emailError')
+            var email = emailInput.value.trim();
+
+            if(email ==="" ){
+                emailError.innerHTML = "Must carry an Email";
+                return false;
+            }
+            if(!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)){
+                emailError.innerHTML = "Please enter a valid email address";
+                return false;
+            }
+            else{
+                emailError.innerHTML = ""
+                return true;
+            }
+        }
+
+        function validatephone(){
+            let phone = document.getElementById('phone').value.trim();
+            if(phone == ""){
+                document.getElementById('phoneError').innerHTML = "Must carry a phone number";
+                 return false;
+            
+            }
+            if(!/^\d{10}$/.test(phone)){
+                document.getElementById('phoneError').innerHTML = 'Phone number should have exactly 10 digits';
+                return false;
+            }
+            else{
+                document.getElementById('phoneError').innerHTML = ""
+                return true;
+            }
+        }
+
+        function validatePassword(){
+            var password = document.getElementById('pass').value.trim();
+            var rePassword = document.getElementById('re_pass').value.trim();
+            var passwordError =document.getElementById('passwordError')
+            if(password != rePassword ){
+                passwordError.innerHTML = "Re enter the same Password"
+                return false;
+            }else{
+                passwordError.innerHTML = ''
+                return true
+            }
+        }
+
+        //last validation during form submit
+        function submitform() {
+            var isValidName = validateName();
+            var isValidEmail = validateEmail();
+            var isValidPhone = validatephone();
+            var isValidPassword = validatePassword();
+
+            if (isValidName && isValidEmail && isValidPhone && isValidPassword) {
+                return true; // Submit the form
+            } else {
+                return false; // Prevent form submission
+            }
+        }
+    </script>
+     <script>
+        setTimeout(()=>{
+            document.getElementById("alert").style.display = "none";
+        },5000)
+     </script>
+
+    <!-- JS -->
+    <script src="user_loginAssets/vendor/jquery/jquery.min.js"></script>
+    <script src="user_loginAssets/js/main.js"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

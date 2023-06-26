@@ -1,0 +1,96 @@
+<!-- header section -->
+<%- include('partials/header') %>
+ <!-- header section -->
+
+ <div class="bg-light py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mb-0"><a href="/">Home</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Wallet</strong></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- content starts -->
+  <div class="container-fluid pt-4 px-4">
+    <div class="bg-light text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="mb-0">Wallet Balance : &nbsp;&nbsp;&nbsp;₹&nbsp;<%= sum.toFixed(2) %></h3>
+            
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <% if (orderDetails && Array.isArray(orderDetails) && walletbalance) { %>
+                <thead>
+                    <tr class="text-dark">
+                        <th scope="col">Sl No</th>
+                        <th scope="col">Order Id</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Products</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Refunded Amount</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+           
+                   
+                    
+                        <% orderDetails.reverse().forEach((item,index ) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item._id %></td>
+                            <td><%= item.createdAt.toLocaleDateString() %></td>
+                            <td><%= item.items[0].product.name %></td>
+                         
+                            <td><%= item.items[0].quantity %></td>
+                            
+                            <td>
+                                <%= item.payment_method %>
+                            </td>
+                            <td><%= item.total %></td>
+                            
+                             
+                            
+
+
+                        </tr>
+                  
+                        <% }) %>
+                       
+                   
+                </tbody>
+                <% }else{%>
+                    <div class="container center mt-5">
+                        <h2 style="text-align: center;">Sorry, no wallet details found</h2>
+                        
+                        <a class="btn btn-primary text-light mb-5 d-flex justify-content-center" href="/" role="button">Return Home</a>
+                      </div>
+                    <%}%>
+            </table>
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+  <!-- footer session -->
+<%- include('partials/footer') %>
+<!-- footer session -->
+
+
+
+<script src="user_assets/js/jquery-3.3.1.min.js"></script>
+<script src="user_assets/js/jquery-ui.js"></script>
+<script src="user_assets/js/popper.min.js"></script>
+<script src="user_assets/js/bootstrap.min.js"></script>
+<script src="user_assets/js/owl.carousel.min.js"></script>
+<script src="user_assets/js/jquery.magnific-popup.min.js"></script>
+<script src="user_assets/js/aos.js"></script>
+
+<script src="user_assets/js/main.js"></script>
+</body>
+</html>
