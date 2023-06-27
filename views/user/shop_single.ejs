@@ -53,7 +53,9 @@
                   <li>
                     <a href="/cart" class="site-cart">
                       <span class="icon icon-shopping_cart"></span>
-                      <span class="count">2</span>
+                      <% if(locals.count){%>
+                        <span class="count"><%= count ? count : '' %></span>
+                        <%} %>
                     </a>
                   </li> 
                   <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
@@ -96,34 +98,22 @@
       <nav class="site-navigation text-right text-md-center" role="navigation">
         <div class="container">
           <ul class="site-menu js-clone-nav d-none d-md-block">
-            <li class="has-children">
+            <li class="has-children active">
               <a href="/">Home</a>
               <ul class="dropdown">
-                <li><a href="#">Menu One</a></li>
-                <li><a href="#">Menu Two</a></li>
-                <li><a href="#">Menu Three</a></li>
-                <li class="has-children">
-                  <a href="#">Sub Menu</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Menu One</a></li>
-                    <li><a href="#">Menu Two</a></li>
-                    <li><a href="#">Menu Three</a></li>
-                  </ul>
-                </li>
+                <% if(locals.user){%>
+                <li><a href="/user/vieworders">View Orders</a></li>
+                <%} %>
+                
               </ul>
             </li>
-            <li class="has-children">
-              <a href="about.html">About</a>
-              <ul class="dropdown">
-                <li><a href="#">Menu One</a></li>
-                <li><a href="#">Menu Two</a></li>
-                <li><a href="#">Menu Three</a></li>
-              </ul>
-            </li>
-            <li class="active"><a href="/shop">Shop</a></li>
-            <li><a href="#">Catalogue</a></li>
-            <li><a href="#">New Arrivals</a></li>
-            <li><a href="contact.html">Contact</a></li>
+          
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="/wallet">Wallet</a></li>
+            <li><a href="/user/vieworders">Orders</a></li>
+            <li><a href="/wishlist">Wishlist</a></li>
+            
+           
           </ul>
         </div>
       </nav>
@@ -152,7 +142,7 @@
             <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, vitae, explicabo? Incidunt facere, natus soluta dolores iusto! Molestiae expedita veritatis nesciunt doloremque sint asperiores fuga voluptas, distinctio, aperiam, ratione dolore.</p> -->
             <p class="mb-4"><%= product.description %></p>
             <p><strong class="text-primary h4">₹<%= product.price %></strong></p>
-            <div class="mb-1 d-flex">
+            <!-- <div class="mb-1 d-flex">
               <label for="option-sm" class="d-flex mr-3 mb-3">
                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-sm" name="shop-sizes"></span> <span class="d-inline-block text-black">Small</span>
               </label>
@@ -165,8 +155,8 @@
               <label for="option-xl" class="d-flex mr-3 mb-3">
                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xl" name="shop-sizes"></span> <span class="d-inline-block text-black"> Extra Large</span>
               </label>
-            </div>
-            <div class="mb-5">
+            </div> -->
+            <!-- <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 120px;">
               <div class="input-group-prepend">
                 <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
@@ -177,7 +167,7 @@
               </div>
             </div>
 
-            </div>
+            </div> -->
             <p><a href="/addToCart/<%= product._id %>" class="buy-now btn btn-sm btn-primary" id="addToCartButton">Add To Cart</a></p>
 
           </div>
@@ -300,36 +290,36 @@
             <h3 class="footer-heading mb-4">Promo</h3>
             <a href="#" class="block-6">
               <img src="/user_assets/images/hero_1.jpg" alt="Image placeholder" class="img-fluid rounded mb-4">
-              <h3 class="font-weight-light  mb-0">Finding Your Perfect Shoes</h3>
-              <p>Promo from  nuary 15 &mdash; 25, 2019</p>
+              <h3 class="font-weight-light  mb-0">Finding Your Perfect Style</h3>
+              
             </a>
           </div>
           <div class="col-md-6 col-lg-3">
             <div class="block-5 mb-5">
               <h3 class="footer-heading mb-4">Contact Info</h3>
               <ul class="list-unstyled">
-                <li class="address">203 Fake St. Mountain View, San Francisco, California, USA</li>
+                <li class="address">Fashion Hub, Kochi, Kerala, India</li>
                 <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
-                <li class="email">emailaddress@domain.com</li>
+                <li class="email">fashionHubdummy@Email.com</li>
               </ul>
             </div>
-
+  
             <div class="block-7">
-              <form action="#" method="post">
+              <form action="#" method="">
                 <label for="email_subscribe" class="footer-heading">Subscribe</label>
                 <div class="form-group">
                   <input type="text" class="form-control py-4" id="email_subscribe" placeholder="Email">
                   <input type="submit" class="btn btn-sm btn-primary" value="Send">
                 </div>
               </form>
-            </div>  
+            </div>
           </div>
         </div>
         <div class="row pt-5 mt-5 text-center">
           <div class="col-md-12">
             <p>
             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" class="text-primary">Colorlib</a>
+            Copyright &copy; All rights reserved | This Project is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="" target="_blank" class="text-primary">Shyam P.S</a>
             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
             </p>
           </div>

@@ -28,7 +28,7 @@
                                 <%= message %>
                             </div>        
                                 <% } %>
-                        <form method="POST" class="register-form" id="register-form" onsubmit="return submitform()">
+                        <form method="POST" action="/signup" class="register-form" id="register-form" onsubmit="return submitform()">
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="text" name="name" id="name" placeholder="Your Name" onkeyup=" return validateName()" required/>
@@ -47,8 +47,9 @@
                             <span class="text-danger mb-3" id="phoneError" style="color: red;"></span>
                             <div class="form-group">
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="password" id="pass" placeholder="Password" required/>
+                                <input type="password" name="password" id="pass" placeholder="Password" onkeyup=" return validatepassword()" required/>
                             </div>
+                            <span class="text-danger mb-3" id="PasswordError" style="color: red;"></span>
                             <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
                                 <input type="password" name="repeatpassword" id="re_pass" placeholder="Repeat your password" onkeyup="return validatePassword()" required/>
@@ -82,7 +83,7 @@
                 return false;
 
             }
-            if(!/^[A-Z][a-zA-Z]*$/.test(name)){
+            if (!/^[A-Z][a-zA-Z\s]*$/.test(name)){
                 nameError.innerHTML = "Name should start with a capital letter and contain only letters"
                 return false
             }else{
@@ -119,7 +120,7 @@
             
             }
             if(!/^\d{10}$/.test(phone)){
-                document.getElementById('phoneError').innerHTML = 'Phone number should have exactly 10 digits';
+                document.getElementById('phoneError').innerHTML = 'Phone number should have exactly 10 numerical digits';
                 return false;
             }
             else{
@@ -127,6 +128,55 @@
                 return true;
             }
         }
+
+
+
+    function validatepassword() {
+        let password = document.getElementById('pass').value
+        var passwordError = document.getElementById('PasswordError');
+
+        // Password should be at least 4 characters long
+        if (password.length < 4) {
+          passwordError.innerHTML ="atleast 4 characters long"
+          return false;
+        }
+
+        // Password should contain at least one lowercase letter
+        if (!/[a-z]/.test(password)) {
+          passwordError.innerHTML ="atleast one lowercase letter"
+          return false;
+        }
+
+        if (!/[A-Z]/.test(password)) {
+          passwordError.innerHTML = "at least one uppercase letter";
+          return false;
+        }
+
+        // Password should contain at least one number
+        if (!/\d/.test(password)) {
+          passwordError.innerHTML ="atleast one number"
+          return false;
+        }
+
+        // Check if password contains spaces
+        if (/\s/.test(password)) {
+          passwordError.innerHTML = "Password should not contain spaces";
+          return false;
+        }
+
+          // Password should contain at least one special symbol
+          if (!/[!@#$%^&*]/.test(password)) {
+            passwordError.innerHTML = "At least one special symbol";
+            return false;
+          }
+
+
+
+        // Password is valid
+        passwordError.innerHTML = ''
+        return true; 
+      }
+
 
         function validatePassword(){
             var password = document.getElementById('pass').value.trim();
@@ -146,9 +196,10 @@
             var isValidName = validateName();
             var isValidEmail = validateEmail();
             var isValidPhone = validatephone();
-            var isValidPassword = validatePassword();
+            var isValidPassword = validatepassword()
+            var isValidRePassword = validatePassword();
 
-            if (isValidName && isValidEmail && isValidPhone && isValidPassword) {
+            if (isValidName && isValidEmail && isValidPhone && isValidPassword && isValidRePassword) {
                 return true; // Submit the form
             } else {
                 return false; // Prevent form submission

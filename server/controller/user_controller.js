@@ -14,9 +14,13 @@ const wallets = require('../model/walletSchema')
 const wishlists = require('../model/wishlistSchema')
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-exports.homepage = (req,res) =>{
+exports.homepage = async (req,res) =>{
         const user = req.session.user;
-        res.render('user/index',{user});
+        const userId = req.session.user?._id
+        //finding cart count
+        const userCart = await cart.findOne({userId : userId})
+        const count = userCart ? userCart.products.length : null;
+        res.render('user/index',{user, count});
 }
 
 exports.userLogin = (req,res)=>{
@@ -93,7 +97,8 @@ exports.find_user = async (req,res) => {
             if (isMatch) {
                 // password is valid
                req.session.user = user
-                res.render('user/index',{user})
+               res.redirect('/');
+
             }else{
                 res.render('user/login',{messsage: "Password is incorrect"})
             }
@@ -117,12 +122,19 @@ exports.log_out = (req,res)=>{
 //getting products page
 exports.shop = async (req, res) => {
   try {
+    //finding cart count
+    
+    const userId = req.session.user?._id
+    const userCart = await cart.findOne({userId : userId})
+    const count = userCart ? userCart.products.length : null;
+
 
     const page = parseInt(req.query.page) || 1; // Current page number
     const limit = 4; // Number of products per page
     const Category = req.query.category;
     console.log(Category);
     const search = req.query.search;
+    const sort = req.query.sort; // Sort parameter (asc for low to high, desc for high to low)
 
     let productQuery = {};
 
@@ -133,16 +145,50 @@ exports.shop = async (req, res) => {
     if (search) {
       productQuery.name = { $regex: new RegExp(search, 'i') };
     }
+    const data = await category.find(); //finding all categories
+    
+    const categoryCounts = {}; // Object to store category counts
+     // Iterate over categories and count the products in each category
+     for (const category of data) {
+      const countCat = await products.countDocuments({
+        ...productQuery,
+        category: category.category,
+      });
+      categoryCounts[category.category] = countCat;
+    }
 
-    const data = await category.find();
-    const { docs, totalPages } = await products.paginate(productQuery, { page, limit });
+
+    const sortOptions = {
+      asc: { price: 1 }, // Low to high sorting
+      desc: { price: -1 }, // High to low sorting
+    };
+    const sortOption = sortOptions[sort] || {}; // Get the corresponding sort option
+
+    const options = {
+      page,
+      limit,
+      sort: sortOption, // Apply the sort option to the query
+    };
+
+    const result = await products.paginate(productQuery, options);
+    
+    const { docs, totalPages } = result;
     // const product = await products.find(productQuery);
     const user = req.session.user;
 
     if (docs.length > 0) {
-      res.render('user/shop', { product: docs, user, data, selectedCategory: Category, totalPages, currentPage: page });
+      res.render('user/shop', { product: docs,
+         user,
+          data,
+           selectedCategory: Category,
+            totalPages,
+             currentPage: page,
+              count,
+               categoryCounts,
+               selectedSort: sort, });
     } else {
-      res.send("Cannot find products from the database.");
+      res.render('user/shop', { product: null, user, data, selectedCategory: Category, totalPages, currentPage: page, count, categoryCounts, selectedSort: sort, });
+      // res.send("Cannot find products from the database.");
     }
   } catch (error) {
     console.log(error);
@@ -156,12 +202,17 @@ exports.shop = async (req, res) => {
 //getting single product page
 exports.single_product = async (req,res) => {
     try{
+      //getting cart count
+      const userId = req.session.user?._id
+      const userCart = await cart.findOne({userId : userId})
+      const count = userCart ? userCart.products.length : null;
+
         const {id} = req.params
         const product = await products.findById(id) 
         const user = req.session.user;
      
         if(product){
-            res.render('user/shop_single',{product,user})
+            res.render('user/shop_single',{product, user, count})
         }else{
             res.send("can not find product ")
         }
@@ -183,11 +234,13 @@ exports.cart = async (req,res) =>{
             const userCart = await cart
             .findOne({userId:userId})
             .populate("products.productId");
+
+            const count = userCart ? userCart.products.length : null;
             if(userCart){
                 let products = userCart.products;
-                res.render('user/cart',{userCart, products, user, data :data.address});
+                res.render('user/cart',{userCart, products, user, data :data.address, count});
             }else{
-                res.render('user/cart',{user})
+                res.render('user/cart',{user, count})
             }
         }catch(error){
             console.log(error);
@@ -342,8 +395,10 @@ exports.check_out =async (req, res) =>{
                         
         let cartItems = await cart.findOne({userId : userId})
                     .populate('products.productId');
+
+        const count = cartItems ? cartItems.products.length : null;
        
-        res.render('user/checkout',{user, addressData : addressDatas.address, cartItems}); 
+        res.render('user/checkout',{user, addressData : addressDatas.address, cartItems, count}); 
 
     
     }catch(error){
@@ -416,13 +471,14 @@ exports.confirm_orderPage = async (req, res) => {
         const addressId = req.params.id
         let cartItems = await cart.findOne({userId : userId})
                         .populate('products.productId')
+        const count = cartItems ? cartItems.products.length : null;
         const data = await users.findOne({_id :userId},{address : {$elemMatch : {_id : addressId}}})
         const coupon = await coupons.find({status : true})
 
        
 
         if(data){
-            res.render('user/confirmOrder',{user, cartItems, data : data.address[0], coupon });
+            res.render('user/confirmOrder',{user, cartItems, data : data.address[0], coupon, count});
 
         }else{
             res.send("can not find data")
@@ -463,6 +519,7 @@ exports.confirm_order = async (req, res) => {
   
       const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
       userCart ? console.log(userCart) : console.log("Cart not found");
+      
       const discount = userCart.discount;
       const wallet = userCart.wallet;
   
@@ -511,7 +568,10 @@ exports.confirm_order = async (req, res) => {
   
         await orderDetails.save();
         await cart.deleteOne({ userId: userId });
-        res.render('user/thankYou', { user });
+        //to get the cart count on header
+        const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
+        const count = userCart ? userCart.products.length : null;
+        res.render('user/thankYou', { user, count });
       }
 
 
@@ -599,7 +659,7 @@ exports.confirm_order = async (req, res) => {
       }]
     };
   
-    paypal.payment.execute(paymentId, execute_payment_json, function(error, payment) {
+    paypal.payment.execute(paymentId, execute_payment_json, async function(error, payment) {
       if (error) {
         if (error.response && error.response.name === 'PAYER_ACTION_REQUIRED') {
           // Redirect the buyer to the PayPal resolution link
@@ -618,8 +678,11 @@ exports.confirm_order = async (req, res) => {
       } else {
     
         console.log(JSON.stringify(payment));
-        req.session.user = user
-        res.render("user/paypal_success", { payment, user });
+        req.session.user = user;
+        //to get the cart count on header
+        const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
+        const count = userCart ? userCart.products.length : null;
+        res.render("user/paypal_success", { payment, user, count });
       }
     });
   };
@@ -640,8 +703,11 @@ exports.confirm_order = async (req, res) => {
         const orders = await order.find({user : userId })
         .populate('user')
         .populate('items.product')
+         //finding cart count
+         const userCart = await cart.findOne({userId : userId})
+         const count = userCart ? userCart.products.length : null;
                         
-        res.render("user/viewOrders",{orders,user})
+        res.render("user/viewOrders",{orders,user, count})
 
        
     }catch(error){
@@ -662,12 +728,16 @@ exports.confirm_order = async (req, res) => {
         .populate('user')
         .populate('items.product')
 
+         //finding cart count
+         const userCart = await cart.findOne({userId : userId})
+         const count = userCart ? userCart.products.length : null;
+
         const orderedProducts = singleOrder.items;
         console.log('ordered product is', orderedProducts);
 
         console.log('single order is',singleOrder );
         if(singleOrder){
-          res.render('user/singleOrderPg',{orders : singleOrder, user, orderedProducts})
+          res.render('user/singleOrderPg',{orders : singleOrder, user, orderedProducts, count})
         }else{
           res.send('can not find single order')
         }
@@ -744,8 +814,12 @@ exports.cancel_order = async (req, res) => {
     try{
     const id = req.session.user?._id
     const user = await users.findOne({_id : id});
+  
+    //finding cart count
+    const userCart = await cart.findOne({userId : id})
+    const count = userCart ? userCart.products.length : null;
     if(user){
-        res.render('user/userProfile',{user})
+        res.render('user/userProfile',{user, count})
     }else{
         console.log('user can not found');
         res.send('user can not found')
@@ -787,6 +861,29 @@ exports.cancel_order = async (req, res) => {
   
     const couponFind = await coupons.findOne({ code: coupon });
     const userCoupon = await users.findOne({_id:userId});
+
+    //checking if coupon amount is larger than cart amount
+    const userCart = await cart.findOne({userId: userId}).populate('products.productId')
+       
+      let totalPrice = 0
+
+       const items = userCart.products.map(item =>{
+        const product = item.productId;
+        const quantity = item.quantity;
+        const price = item.productId.price
+       
+       
+        totalPrice += price * quantity;
+  
+      })
+
+      if(couponFind.discount >= totalPrice){
+        return res.json({
+          success: false,
+          message: 'Can not use, Discount amount exceeded'
+        });
+      }
+
   
     if (userCoupon.coupon.includes(coupon)) {
       return res.json({
@@ -853,12 +950,17 @@ exports.cancel_order = async (req, res) => {
       const user = req.session.user;
       let sum = 0;
       const walletbalance = await wallets.findOne({ userId :userId}).populate('orderId');
-      const orderDetails = await order.find({user : userId, status : 'Amount Refunded'}).populate('items.product')
+      const orderDetails = await order.find({user : userId, status : 'Amount Refunded'}).populate('items.product');
+
+       //finding cart count
+       const userCart = await cart.findOne({userId : userId})
+       const count = userCart ? userCart.products.length : null;
+      
   
       if(walletbalance){
         sum += walletbalance.balance;
       }
-      res.render('user/wallet',{walletbalance, wallet : walletbalance?.orderId, user, orderDetails, sum})
+      res.render('user/wallet',{walletbalance, wallet : walletbalance?.orderId, user, orderDetails, sum, count})
 
     }catch(error){
       console.log(error);
@@ -969,11 +1071,15 @@ exports.cancel_order = async (req, res) => {
       const user = req.session.user;
       const userId = req.session.user?._id;
       const userWishlist = await wishlists.findOne({ userId: userId }).populate('product');
+       //finding cart count
+       const userCart = await cart.findOne({userId : userId})
+       const count = userCart ? userCart.products.length : null;
       if(userWishlist){
         console.log("bbbbbbbbbbbb",userWishlist.product);
-        res.render('user/wishlist',{user, userWishlist : userWishlist.product})
+        res.render('user/wishlist',{user, userWishlist : userWishlist.product, count})
       }else{
-        res.send('failed to load wishlist')
+        res.render('user/wishlist',{user, count})
+        // res.send('failed to load wishlist')
       }
     }catch(error){
       console.log(error);
