@@ -462,6 +462,35 @@ exports.edit_address = async(req, res) =>{
     
 }
 
+//deleting address in the checkout page
+exports.deleteAddress = async (req, res) =>{
+  try{
+    const userId = req.session.user?._id;
+    const addressId = req.params.id;
+
+    const delAddress = await users.findByIdAndUpdate(
+      userId,
+      { $pull: { address: { _id: addressId } } },
+      { new: true }
+    );
+
+    if(!delAddress){
+
+      console.log('can not find the address to delete')
+    res.json({success : false})
+       
+    }else{
+      
+      console.log('Address deleted successfully');
+       res.json({success : true})
+    }
+  }catch(error){
+        console.log(error);
+        res.status(500).json({ success: false, error: error.message || "some error occured while deleting address in the  checkout page"});
+       
+    }
+}
+
 //confirm order for user
 exports.confirm_orderPage = async (req, res) => {
     try{

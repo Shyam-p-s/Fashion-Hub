@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700"> 
     <link rel="stylesheet" href="/user_assets/fonts/icomoon/style.css">
 
@@ -64,7 +67,7 @@
                       <li>
                         <a href="#" class="site-cart">
                           <span class="icon icon-shopping_cart"></span>
-                          <span class="count">2</span>
+                          
                         </a>
                       </li> 
                       <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
@@ -209,6 +212,14 @@
                         <div class="col">
                           <a type="button" href="" class="btn btn-primary mb-1 " data-toggle="modal" data-target="#exampleModal<%= address._id %>">Edit address</a>
                         </div>
+                        <a href="#" title="Delete address" onclick="confirmdelete(event, '<%= address._id %>')">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash3-fill pointer" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                          </svg>
+                        </a>
+                        
+                        
+                        
                       </div>
                       
                     <%}) %>
@@ -267,7 +278,7 @@
     <% if(locals.addressData){%>
       <% locals.addressData.forEach((address) =>{%>
 <div class="modal fade" id="exampleModal<%= address._id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
@@ -421,7 +432,54 @@
   setSubtotal();
   </script>
 
+  <script>
+    function confirmdelete(event, addressId) {
+      event.preventDefault(); // Prevent the link from immediately navigating
+    
+      swal({
+        title: "Do you really want to delete the address?",
+        icon: "warning",
+        buttons: {
+          cancel: "No",
+          confirm: "Yes"
+        },
+      }).then((confirmed) => {
+        if (confirmed) {
+      deleteAddress(addressId)
+      };
+    })
+  }
 
+  function deleteAddress(addressId){
+    $.ajax({
+      url: `/deleteAddress/${addressId}`,
+      method: 'DELETE',
+      success:(data) =>{
+        if(data.success){
+          //address deleted successfully
+          swal("Success", "Address deleted successfully", "success").then(() => {
+                  // Reload the page
+                  location.reload();
+                });
+        }else{
+           // Failed to delete the category
+           console.log(1);
+           swal("Error", "Failed to delete the address", "error");
+        }
+      },
+      error: function(xhr, status, error) {
+        console.log(2);
+              // Display error message
+              swal("Error", "Failed to delete the address", "error");
+            }
+    })
+  }
+
+  </script>
+
+   <!-- sweet alert -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" ></script>
 
   <script src="/user_assets/js/jquery-3.3.1.min.js"></script>
   <script src="/user_assets/js/jquery-ui.js"></script>

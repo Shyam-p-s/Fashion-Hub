@@ -64,7 +64,7 @@
                       <li>
                         <a href="#" class="site-cart">
                           <span class="icon icon-shopping_cart"></span>
-                          <span class="count">2</span>
+                      
                         </a>
                       </li> 
                       <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
@@ -161,12 +161,14 @@
                       <td>
                         <div class="input-group mb-3" style="max-width: 120px;">
                           <div class="input-group-prepend">
-                            <button class="btn btn-outline-primary js-btn-minus" id="decrement_<%= product.productId._id %>" onclick="decrementQuantity('<%= product.productId._id %>')" type="button">&minus;</button>
+                            <button class="btn btn-outline-primary js-btn-minus" id="decrement_<%= product.productId._id %>" onclick="decrementQuantity('<%= product.productId._id %>')" type="button" >&minus;</button>
                           </div>
-                          <input type="number" class="form-control text-center" name="quantity" value="<%= product.quantity %>" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="quantity_<%= product.productId._id %>">
+                          <input type="number" readonly class="form-control text-center" name="quantity" min="1" value="<%=  product.quantity %>" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" id="quantity_<%= product.productId._id %>">
                           <div class="input-group-append">
                             <button class="btn btn-outline-primary js-btn-plus" id="increment_<%= product.productId._id %>" onclick="incrementQuantity('<%= product.productId._id %>')" type="button">&plus;</button>
                           </div>
+
+                          
                         </div>
   
                       </td>
@@ -197,18 +199,7 @@
                   <a href="/shop" class="btn btn-outline-primary btn-sm btn-block">Continue Shopping</a>
                 </div>
               </div>
-              <!-- <div class="row">
-                <div class="col-md-12">
-                  <label class="text-black h4" for="coupon">Coupon</label>
-                  <p>Enter your coupon code if you have one.</p>
-                </div>
-                <div class="col-md-8 mb-3 mb-md-0">
-                  <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-primary btn-sm">Apply Coupon</button>
-                </div>
-              </div> -->
+              
             </div>
             <div class="col-md-6 pl-5">
               <div class="row justify-content-end">
@@ -379,7 +370,9 @@
       success: function (data) {
         if(data.success) {
           $(`#product-total-price-${cartId}`).text(data.total);
-          $(`#quantity_${cartId}`).text(data?.quantity);
+          // $(`#quantity_${cartId}`).text(data?.quantity);
+          $(`#quantity_${cartId}`).val(data?.quantity);
+         
 						setSubtotal();
         }else{
           console.log('error while updating');
@@ -394,7 +387,9 @@
 
 
   	function decrementQuantity(cartItemId) {
-			var currentQuantity = parseInt($(`#quantity_${cartItemId}`).text());
+			// let currentQuantity = parseInt($(`#quantity_${cartItemId}`).text());
+      let currentQuantity = parseInt($(`#quantity_${cartItemId}`).val());
+     
 			if(currentQuantity > 1) {
 				$.ajax({
 					url: "/decrementQuantity",
@@ -404,8 +399,13 @@
 						// Handle success response here
 						console.log(data);
 						$(`#product-total-price-${cartItemId}`).text(data.total);
-						$(`#quantity_${cartItemId}`).text(data?.quantity);
+						// $(`#quantity_${cartItemId}`).text(data?.quantity);
+            $(`#quantity_${cartItemId}`).val(data?.quantity);
+          
 						setSubtotal();
+
+          
+
 					},
 					error: function (jqXHR, textStatus, errorThrown) {
 						// Handle error response here
@@ -413,7 +413,11 @@
 					}
 				})
 			} else {
-				$(`#quantity_${cartItemId}`).text(1)
+				// $(`#quantity_${cartItemId}`).text(1)
+        $(`#quantity_${cartItemId}`).val(1);
+       
+
+      
 			}
 		}
 
