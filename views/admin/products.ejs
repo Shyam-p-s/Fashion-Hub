@@ -210,7 +210,7 @@
                                         <td><%= product.category %></td>
                                         <td><%= product.description %></td>
                                         <td><%= product.price %></td>
-                                        <td><img width="70px" src="<%= product.image %>" alt="img" ></td>
+                                        <td><img width="70px" src="<%= product.image[0] %>" alt="img" ></td>
                                         <td>
                                            
                                                 <a href="/updateProduct/<%= product._id%>" class="btn border-shadow update" title="Update Product">

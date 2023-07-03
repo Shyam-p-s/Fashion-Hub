@@ -269,3 +269,73 @@ exports.shop = async (req, res) => {
     });
   }
 };
+
+
+
+
+//carousel for single product page
+<!-- new -->
+<div class="site-section  bg-white">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 stretch-card">
+        <div
+          id="carouselExample-cf"
+          class="carousel carousel-dark slide carousel-fade"
+          data-bs-ride="carousel"
+        >
+
+       
+          <ol class="carousel-indicators">
+           
+            <li data-bs-target="#carouselExample-cf" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carouselExample-cf" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carouselExample-cf" data-bs-slide-to="2"></li>
+          </ol>
+
+          <div class="carousel-inner bg-light">
+            
+            <div class="carousel-item active easyzoom easyzoom--overlay">
+              <img src="/<%= product.image[0]%> " alt="Image"  class="mainimage d-block w-100 img-fluid border border-light">
+            </div>
+           
+
+            <div class="carousel-item easyzoom easyzoom--overlay">
+              <img src="/<%= product.image[1] %>" alt="Image" class="mainimage d-block w-100 img-fluid border border-light" >
+            </div>
+
+            <div class="carousel-item easyzoom easyzoom--overlay">
+              <img src="/<%= product.image[2] %>" alt="Image" class="mainimage d-block w-100 img-fluid border border-light">
+            </div>
+          </div>
+
+          <a class="carousel-control-prev" href="#carouselExample-cf" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExample-cf" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </a>
+        </div>
+    
+      </div>
+
+      <div class="col-md-6">
+        <h2 class="text-black product-name" title="<%= product.name %>"><%= product.name %></h2>
+        <p class=""><%= product.description %></p>
+        <p class="mb-4"></p>
+        <p><strong class="text-primary h4"> ₹ <%= product.price %></strong></p>
+        <div class="mb-5">
+        </div>
+
+        <div class="d-flex">
+         
+          <p><a href="/addToCart/<%= product._id %>" class="buy-now btn btn-sm btn-primary" id="addToCartButton">Add To Cart</a></p>
+      
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

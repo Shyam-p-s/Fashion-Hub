@@ -20,10 +20,10 @@ var productSchema = new mongoose.Schema({
         required : true,
         min: 0
     },
-    image : {
+    image : [{
         type : String,
         required : true
-    }
+    }],
 })
 
 productSchema.plugin(mongoosePaginate);

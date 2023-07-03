@@ -50,7 +50,7 @@
                                 
                                 <td>
                                  <% orders.items.forEach((item)=>{%>
-                                        <img src="/<%= item.product.image %>" alt="img" width="30px" class="img-thumbnail" > <br>
+                                        <img src="/<%= item.product.image[0] %>" alt="img" width="30px" class="img-thumbnail" > <br>
                                  <%}) %>
                                 </td>
                                 <td>
@@ -140,7 +140,7 @@
                                         <% orders.items.forEach((item, index) => { %>
                                         <div class="col-md-6">
                                             <p><%= index+1 %>. <%= item.product.name %></p>
-                                            <img src="/<%= item.product.image %>" alt="img" width="50px" class="img-thumbnail">
+                                            <img src="/<%= item.product.image[0] %>" alt="img" width="50px" class="img-thumbnail">
                                          
                                         </div>
                                         

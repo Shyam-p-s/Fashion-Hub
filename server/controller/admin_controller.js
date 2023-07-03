@@ -8,6 +8,8 @@ const { log } = require('console');
 const paypal = require('paypal-rest-sdk');
 const coupons = require('../model/couponSchema')
 const wallets = require('../model/walletSchema')
+const multer = require('multer');
+const sharp = require('sharp')
 
 //getting admin index
 exports.admin_Login = async (req,res) => {
@@ -18,7 +20,6 @@ exports.admin_Login = async (req,res) => {
         endOfDay.setDate(endOfDay.getDate() + 1);
         endOfDay.setMilliseconds(endOfDay.getMilliseconds() - 1);
 
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaadf');
     
         const orders = await order.find(); //Fetching all orders from the database
     
@@ -152,7 +153,7 @@ exports.admin_Login = async (req,res) => {
         console.log(error);
     res.send({message : error.message ||'some error while logging admin' })
     }
-    // res.render('admin/login')
+   
 }
 
 
@@ -205,32 +206,41 @@ exports.addProducts = async (req,res)=>{
 
 
 //adding products
-exports.add_products = async  (req,res)=> {
-        try{
-            //    handle case where req.file is undefined
-            if(!req.file){
-                return res.status(400).send({
-                    message:'No file uploaded'
-                });}
 
-                const product = new products({
-                    name : req.body.name,
-                    category : req.body.category,
-                    price : req.body.price,
-                    description : req.body.description,
-                    image  : req.file.filename
-                })
-                console.log(product);
-                await product.save()
-                res.redirect('/viewproducts');
-        } catch (err) {
-            console.log(err);
-            res.render('admin/404error',{errMsg : err.message ||'error while adding category'})
-            // res.status(500).send({
-            //   message: err.message || 'Error while adding products'
-            // });}
-    
-    }
+exports.add_products = async  (req,res)=> {
+    try{
+        
+
+            const product = new products({
+                name : req.body.name,
+                category : req.body.category,
+                price : req.body.price,
+                description : req.body.description,
+               
+            });
+            // Crop and save each uploaded image
+            const croppedImages = [];
+            for (const file of req.files) {
+                const croppedImage = `cropped_${file.filename}`;
+          
+                await sharp(file.path)
+                  .resize(500, 600, { fit: "cover" })
+                  .toFile(`uploads/${croppedImage}`);
+          
+                croppedImages.push(croppedImage);
+              }
+
+              product.image = croppedImages
+              await product.save()
+            console.log(product);
+            
+            res.redirect('/viewproducts');
+    } catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while adding category'})
+       
+
+}
 }
 
 
@@ -261,9 +271,12 @@ exports.delete_product = async(req,res) => {
         else{
             res.redirect('/viewproducts') 
         }
-    }catch(err){
-        res.status(500).send(err.message)
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while deleting products'})
+       
+
+}
 }
 
 // getting update product
@@ -289,62 +302,78 @@ exports.updateProduct =  async (req,res)=>{
       res.status(500).send({
         message: error.message || 'some error while getting add products page'
     })
-      // res.redirect('/viewproducts')
+     
     }
     
   }
 
 //updating products
-exports.update_product = async (req,res) =>{
 
+exports.update_product = async (req, res) => {
     try {
-        const id = req.params.id
-        
-        let new_image = "";
-        if (req.file) {
-          new_image = req.file.filename;
-          try {
-            fs.unlinkSync("./uploads/" + req.body.image);
-          } catch (error) {
-            console.log(error);
+      const id = req.params.id;
+      const files = req.files;
+      let new_images = [];
+      // Check if files were uploaded
+      if (files && files.length > 0) {
+       
+  
+        // Delete the previous images
+        if (req.body.images && req.body.images.length > 0) {
+          for (const image of req.body.images) {
+            try {
+                fs.unlinkSync(`./uploads/${image}`);
+            } catch (error) {
+              console.log(error);
+            }
           }
-        } else {
-          new_image = req.body.image;
         }
-    
-    
-        // Update the product using findByIdAndUpdate
-        const updatedProduct = await products.findByIdAndUpdate(
-          id,
-          {
-            name: req.body.name,
-            category:req.body.category,
-            description:req.body.description,
-            price:req.body.price,
-            image:new_image 
-          },
-    
-          { new: true }
-    
-        );
-        
-        
-        // Set { new: true } to return the updated document
-    
-        if (updatedProduct) {
-          console.log("Product updated");
-          res.redirect("/viewproducts");
-        } else {
-          // if Product not found
-          console.log("Product not found");
-          res.redirect("/viewproducts");
+  
+        // Crop and save the new images
+        for (const file of files) {
+        //   const newImage = file.filename;
+        const newImage = `${file.fieldname}_${Date.now()}_${file.originalname}`;
+  
+          // Perform image cropping
+          await sharp(file.path)
+            .resize({ width: 500, height: 600 })
+            .toFile(`./uploads/${newImage}`);
+  
+          new_images.push(newImage);
         }
-      } catch (error) {
-        console.error(error);
-        res.send(error);
+      } else {
+        new_images = req.body.images;
       }
-      
-    }
+  
+      // Update the product using findByIdAndUpdate
+      const updatedProduct = await products.findByIdAndUpdate(
+        id,
+        {
+          name: req.body.name,
+          category: req.body.category,
+          description: req.body.description,
+          price: req.body.price,
+          image: new_images,
+        },
+        { new: true }
+      );
+  
+      if (updatedProduct) {
+        console.log("Product updated");
+        res.redirect("/viewproducts");
+      } else {
+        console.log("Product not found");
+        res.redirect("/viewproducts");
+      }
+    } catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while updating product'})
+       
+
+}
+  };
+  
+
 
 
 //category management
@@ -385,9 +414,6 @@ exports.add_Category = async (req,res) => {
   }catch(error){
     console.log(error);
     res.render('admin/404error',{errMsg : 'error while adding category'})
-    // res.status(500).send({
-    //     message : error.message || "some error occured while creating category"
-    // })
   }
 }
 
@@ -474,10 +500,12 @@ exports.updateCategory = async (req,res) => {
                 res.send('can not update category')
                }
    
-    }catch(error){
-        console.log(error);
-        res.status(500).send({message : error.message||'some error occured while updating category' })
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while updating category'})
+       
+
+}
     
 
 }
@@ -492,12 +520,12 @@ exports.delete_category = async(req,res) =>{
        }else{
         res.redirect('/categories');
        }
-    }catch(error){
-        console.log(error);
-        res.status(500).send({
-            message : error.message || "some error occured while deleting category"
-        })
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while deleting category'})
+       
+
+}
 }
 
 
@@ -535,9 +563,12 @@ exports.block_user = async (req,res) =>{
     console.log(block);
     res.redirect('/users')
 
-    }catch(error){
-        res.send({message : error.message || "error while blocking user"})
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while blocking user'})
+       
+
+}
     
 }
 
@@ -554,9 +585,12 @@ exports.unblock_user = async (req,res) =>{
     console.log(block);
     res.redirect('/users')
 
-    }catch(error){
-        res.send({message : error.message || "error while blocking user"})
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while unblocking user'})
+       
+
+}
     
 }
 
@@ -649,10 +683,12 @@ exports.add_coupon = async (req,res) =>{
         await coupon.save();
         console.log("coupon added sucessfully");
         return res.render('admin/addCoupons', { messsage : "Coupon added successfully" });
-    }catch(error){
-        console.log(error);
-        res.status(500).send({message : error.message || "Unable to add the coupon"})
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while adding coupon'})
+       
+
+}
 }
 
 //delete coupon
@@ -666,10 +702,12 @@ exports.delete_coupon = async (req,res) => {
     }else{
         console.log('Can not delete coupon');
     }
-   }catch(error){
-    console.log(error);
-    res.status(500).send({message : error.message || "Unable to delete the coupon"})
-   }
+   }catch (err) {
+    console.log(err);
+    res.render('admin/404error',{errMsg : err.message ||'error while deleting coupon'})
+   
+
+}
 }
 
 //Activating coupon
@@ -717,10 +755,12 @@ exports.edit_Coupon = async (req,res) =>{
             console.log('Can not update coupon');
         }
         
-    }catch(error){
-        console.log(error);
-        res.status(500).send({message : error.message || "Unable to update the coupon"})
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while editing coupon'})
+       
+
+}
     
     
 }
@@ -753,19 +793,19 @@ exports.refund = async (req,res) => {
 
         await order.updateOne({_id:id},{$set :{status : 'Amount Refunded'}})
         res.redirect('/view_orders')
-    }catch(error){
-        console.log(error);
-        res.status(500).send({message : error.message || "Unable refund"})
-    }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while refunding'})
+       
+
+}
 }
 
 //sales report
 exports.salesReport = async (req,res) =>{
     try{
         const sales = await order.find({status : 'Delivered'}).populate('items.product').populate('user')
-        console.log("sales report ",sales);
-    //     const filteredOrders=await order.find().populate("user").populate("items.product").populate("address")
-    //   console.log(filteredOrders,"hhhdhdhh");
+
         res.render('admin/sales_report', {sales});
     }catch(error){
         console.log(error);

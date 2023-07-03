@@ -3,44 +3,45 @@ const route = express.Router();
 const admin_controller = require('../controller/admin_controller')
 const multer = require('multer');
 const fs = require('fs');
-const middleware = require('../middlewares/middlewares')
+const middleware = require('../middlewares/middlewares');
+const sharp = require('sharp');
+
 
 //multer
 //multer configuration for single pics
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, 'uploads/');
+//   },
+//   filename: function(req, file, cb) {
+//     cb(null, file.originalname);
+//   }
+// });
 
-const upload = multer({ storage: storage}).single('image');
+// const upload = multer({ storage: storage}).single('image');
 
 
 
 //multer configuration for multiple pics
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     // make sure directory exists
-//     const uploadDir = './uploads';
-//     if (!fs.existsSync(uploadDir)) {
-//       fs.mkdirSync(uploadDir);
-//     }
-//     cb(null, uploadDir);
-//   },
-//   filename: function (req, file, cb) {
-//     // remove spaces and special characters from original filename
-//     const originalname = file.originalname.replace(/[^a-zA-Z0-9]/g, "");
-//     // set filename to fieldname + current date + original filename
-//     cb(null, `${file.fieldname}_${Date.now()}_${originalname}`);
-//   },
-// });
-
-// var upload = multer({ storage: storage })
-// .array('image', 4);
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // make sure directory exists
+    if (!fs.existsSync("./uploads")) {
+      fs.mkdirSync("./uploads");
+    }
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    // remove spaces and special characters from original filename
+    var originalname = file.originalname.replace(/[^a-zA-Z0-9]/g, "");
+    // set filename to fieldname + current date + original filename
+    cb(null, file.fieldname + "_" + Date.now() + "_" + originalname);
+  },
+});
+var upload = multer({
+  storage: storage,
+}).array('image',5)
 
 
   

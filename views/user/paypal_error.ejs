@@ -1,0 +1,164 @@
+
+
+<!-- header section -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Fashion Hub </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/user_assets/https://fonts.googleapis.com/css?family=Mukta:300,400,700"> 
+    <link rel="stylesheet" href="/user_assets/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="/user_assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/user_assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/user_assets/css/jquery-ui.css">
+    <link rel="stylesheet" href="/user_assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/user_assets/css/owl.theme.default.min.css">
+
+
+    <link rel="stylesheet" href="/user_assets/css/aos.css">
+
+    <link rel="stylesheet" href="/user_assets/css/style.css">
+
+   
+
+  </head>
+  <body>
+  
+  <div class="site-wrap">
+    <header class="site-navbar" role="banner">
+      <div class="site-navbar-top">
+        <div class="container">
+          <div class="row align-items-center">
+
+            <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+              <form action="" class="site-block-top-search">
+                <span class="icon icon-search2"></span>
+                <input type="text" class="form-control border-0" placeholder="Search">
+              </form>
+            </div>
+
+            <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+              <div class="site-logo">
+                <a href="/" class="js-logo-clone">FASHION HUB</a>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+              <div class="site-top-icons">
+                <ul>
+                  <% if(locals.user){%>
+                    <li><a href="/user/profile"><span class="icon icon-person"></span></a></li>
+                  <li><a href="/wishlist"><span class="icon icon-heart-o"></span></a></li>
+                  <li>
+                    <a href="/cart" class="site-cart">
+                      <span class="icon icon-shopping_cart"></span>
+                      <% if(locals.count){%>
+                        <span class="count"><%= count ? count : '' %></span>
+                        <%} %>
+                    </a>
+                  </li> 
+                  <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
+                    <%}else{%>
+                      <li><a href="#"><span class="icon icon-person"></span></a></li>
+                      <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                      <li>
+                        <a href="#" class="site-cart">
+                          <span class="icon icon-shopping_cart"></span>
+                          <span class="count">2</span>
+                        </a>
+                      </li> 
+                      <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
+                    <%}
+                    %>
+                  
+                </ul>
+              </div> 
+              <!-- login -->
+              <% if(locals.user){%>
+                   <!-- Example single danger button -->
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <%= user.name %>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="/user/logout">Log out</a>
+                    </div>
+                  </div>
+
+                <%}else{%>
+                  <a class="btn btn-primary text-light" href="/login" role="button">Log In</a>
+                <%} %>
+              
+            </div>
+
+          </div>
+        </div>
+      </div> 
+      <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+          <ul class="site-menu js-clone-nav d-none d-md-block">
+            <li class="has-children active">
+              <a href="/">Home</a>
+              <ul class="dropdown">
+                <% if(locals.user){%>
+                <li><a href="/user/vieworders">View Orders</a></li>
+                <%} %>
+                
+              </ul>
+            </li>
+          
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="/wallet">Wallet</a></li>
+            <li><a href="/user/vieworders">Orders</a></li>
+            <li><a href="/wishlist">Wishlist</a></li>
+            
+           
+          </ul>
+        </div>
+      </nav>
+    </header>
+ <!-- header section -->       
+        
+    <!-- Start Header Area -->
+	
+	<!-- End Header Area -->
+
+    <!-- Start Banner Area -->
+    
+    <!-- End Banner Area -->
+
+    <!--================Checkout Area =================-->
+
+    <section class="checkout_area section_gap m-t-100">
+        <div class="container">
+            <div class="billing_details">
+                <div class="row ">
+                        <div class="col-md-12"> 
+                              <div class = "main">
+                                  <div class="row padder"> 
+                                      <div class="col-md-9"> 
+                                          <h1> Your Paypal Payment cancelled</h1>
+                                        
+                                          <hr>
+                                         
+                                          <hr> 
+                                          <a href="/shop"> 
+                                          <button class="btn btn-warning btn-lg"> Continue Shopping </button> 
+                                          </a> 
+                                      </div> 
+                                  </div> 
+                               </div>
+                        </div> 
+                   </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!--================End Checkout Area =================-->
+
+    <!-- start footer Area -->
+
+    <!-- End footer Area -->

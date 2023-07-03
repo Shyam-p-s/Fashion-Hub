@@ -30,6 +30,10 @@
 
     <!-- Template Stylesheet -->
     <link href="admin_assets/css/style.css" rel="stylesheet">
+
+    <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -180,16 +184,16 @@
                 <div class="col-sm-12 col-xl-6">
                     <div class="bg-light rounded h-100 p-4">
                         <h6 class="mb-4">Add Products</h6>
-                        <form method="post" action="/addproducts" enctype="multipart/form-data">
+                        <form method="post" action="/addproducts" enctype="multipart/form-data" onsubmit="return validateForm()">
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" name="name"
+                                <label for="exampleInputName" class="form-label">Product name</label>
+                                <input type="text" class="form-control" id="exampleInputName" name="name"
                                     aria-describedby="emailHelp" required>
                                
                             </div>
                             <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Price</label>
-                                <input type="text" class="form-control" name="price" id="exampleInputPassword1">
+                                <label for="exampleInputPrice" class="form-label">Price</label>
+                                <input type="text" class="form-control" name="price" id="exampleInputPrice">
                             </div required>
                           
                             <select class="form-select mb-3" name="category" aria-label="Default select example">
@@ -205,7 +209,7 @@
                             </div required>
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Choose the image</label>
-                                <input class="form-control" name="image" type="file" id="formFile"  >
+                                <input class="form-control" name="image" type="file" id="formFile" multiple required >
                             </div>
                             
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -225,6 +229,37 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+
+    <script>
+        function validateForm() {
+            var productName = document.getElementById("exampleInputName").value;
+            var price = parseFloat(document.getElementById("exampleInputPrice").value);
+    
+            if (!/^[A-Z]/.test(productName)) {
+                // Show SweetAlert error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Product Name',
+                    text: 'Product name should start with a capital letter.',
+                });
+    
+                return false;
+            }
+    
+            if (price <= 0 || isNaN(price)) {
+                // Show SweetAlert error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Price',
+                    text: 'Price should be a positive number.',
+                });
+    
+                return false;
+            }
+    
+            return true;
+        }
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

@@ -184,7 +184,7 @@
                                 
                                 <td>
                                   <% orders.items.forEach((item, index) => { %>
-                                    <img src="/<%= item.product.image %>" alt="img" width="40px" class="img-thumbnail" > <br>
+                                    <img src="/<%= item.product.image[0] %>" alt="img" width="40px" class="img-thumbnail" > <br>
                                   <%})%>
                                 </td>
                                 <td><%= orders.status %></td>

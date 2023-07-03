@@ -130,7 +130,7 @@ exports.shop = async (req, res) => {
 
 
     const page = parseInt(req.query.page) || 1; // Current page number
-    const limit = 4; // Number of products per page
+    const limit = 6; // Number of products per page
     const Category = req.query.category;
     console.log(Category);
     const search = req.query.search;
@@ -412,8 +412,6 @@ exports.check_out =async (req, res) =>{
 exports.add_address = async (req, res) => {
     try{
         const userId = req.session.user?._id ;
-        console.log(userId);
-        console.log(req.body);
         const {name, address, city, state, pincode, phone } = req.body;
         const user = await users.findOne({_id :userId})
         if(user){
@@ -626,7 +624,7 @@ exports.confirm_order = async (req, res) => {
             payer: { payment_method: "paypal" },
             redirect_urls: {
               return_url: `http://localhost:5000/paypal-success/${userId}`,
-              cancel_url: "http://localhost:5000/paypal-err",
+              cancel_url: `http://localhost:5000/paypal-err/${userId}`,
             },
             transactions: [ 
               {
@@ -706,9 +704,8 @@ exports.confirm_order = async (req, res) => {
         }
       } else {
     
-        console.log(JSON.stringify(payment));
+        // console.log(JSON.stringify(payment));
         req.session.user = user;
-        //to get the cart count on header
         const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
         const count = userCart ? userCart.products.length : null;
         res.render("user/paypal_success", { payment, user, count });
@@ -718,10 +715,20 @@ exports.confirm_order = async (req, res) => {
   
   
   
-  exports.paypal_err = (req, res) => {
-    console.log("Hi Error");
-    console.log(req.query)
-    res.send("error")
+  exports.paypal_err = async (req, res) => {
+    try{
+      const userId = req.params.id
+      const user = await users.findOne({ _id: userId });
+      req.session.user = user;
+      const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
+      const count = userCart ? userCart.products.length : null;
+      res.render("user/paypal_error", {user, count });
+
+    }catch(error){
+        console.log(error);
+        res.status(500).send({message : error.message || "can not get error page"})
+    }
+    
   }
   
   //view orders

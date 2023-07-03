@@ -22,6 +22,9 @@
 
     <link rel="stylesheet" href="/user_assets/css/style.css">
 
+        <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
     
   </head>
@@ -135,10 +138,10 @@
           <div class="col-md-6 mb-5 mb-md-0">
             <h2 class="h3 mb-3 text-black">Details</h2>
             <div class="p-3 p-lg-5 border">
-             <form method="post" action="/addAddress">
+             <form method="post" action="/addAddress" onsubmit="return validateForm()" >
               <div class="form-group row">
                 <div class="col-md-12">
-                  <label for="c_fname" class="text-black">Full Name <span class="text-danger">*</span></label>
+                  <label for="name" class="text-black">Full Name <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="name" name="name" required>
                 </div>
                 
@@ -146,7 +149,7 @@
 
               <div class="form-group row">
                 <div class="col-md-12">
-                  <label for="c_companyname" class="text-black">Address <span class="text-danger">*</span> </label>
+                  <label for="address" class="text-black">Address <span class="text-danger">*</span> </label>
                   <input type="text" class="form-control" id="address" name="address" required>
                 </div>
               </div>
@@ -155,23 +158,23 @@
 
               <div class="form-group row">
                 <div class="col-md-6">
-                  <label for="c_state_country" class="text-black">City <span class="text-danger">*</span></label>
+                  <label for="city" class="text-black">City <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="city" name="city" required>
                 </div>
                 <div class="col-md-6">
-                  <label for="c_postal_zip" class="text-black">State <span class="text-danger">*</span></label>
+                  <label for="state" class="text-black">State <span class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="state" name="state" required>
                 </div>
               </div>
 
               <div class="form-group row mb-5">
                 <div class="col-md-6">
-                  <label for="c_email_address" class="text-black">Posta / Zip<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="pincode" name="pincode" required>
+                  <label for="pincode" class="text-black">Posta / Zip<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="pincode" name="pincode" maxlength="8" required>
                 </div>
                 <div class="col-md-6">
-                  <label for="c_phone" class="text-black">Phone <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                  <label for="phone" class="text-black">Phone <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="phone" name="phone" maxlength="10" placeholder="Phone Number" required>
                 </div>
               </div>
 
@@ -181,12 +184,12 @@
              
              <% if(!locals.addressData){%>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-lg py-3 btn-block">Add new address</button>
+                    <button type="submit" class="btn btn-primary btn-lg py-3 btn-block">Add new address</button>
                   </div>
 
                 <%}else{%>
                     <div class="form-group">
-                        <button class="btn btn-primary btn-lg py-3 btn-block" >Add new address</button>
+                        <button type="submit" class="btn btn-primary btn-lg py-3 btn-block" >Add new address</button>
                       </div>
                     <%} %>
                   </form>
@@ -476,6 +479,72 @@
   }
 
   </script>
+
+  
+<script>
+  function validateForm() {
+      var name = document.getElementById("name").value;
+      var city = document.getElementById("city").value;
+      var state = document.getElementById("state").value;
+      var pincode = document.getElementById("pincode").value;
+      var phone = document.getElementById("phone").value;
+
+      // Validate name (starts with a capital letter, no numbers or special characters)
+      if (!/^[A-Z][a-zA-Z\s]*$/.test(name)) {
+          // Show SweetAlert error message
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Name',
+                    text: 'Name should start with a capital letter and should not contain numbers or special characters.',
+                });
+          return false;
+      }
+
+      // Validate city (no numbers)
+      if (/\d/.test(city)) {
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid City',
+                    text: 'City should not contain numbers',
+                });
+          
+          return false;
+      }
+
+      // Validate state (no numbers)
+      if (/\d/.test(state)) {
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid State',
+                    text: 'State should not contain numbers',
+                });
+          
+          return false;
+      }
+
+      // Validate pincode (only numbers)
+      if (!/^\d+$/.test(pincode)) {
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Pincode',
+                    text: 'Pincode should contain only numbers.',
+                });
+          return false;
+      }
+
+      // Validate phone number (10 digits, only numbers)
+      if (!/^\d{10}$/.test(phone)) {
+          Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Phone Number',
+                    text: 'Phone number should be 10 digits and should contain only numbers.',
+                });
+          return false;
+      }
+
+      return true;
+  }
+</script>
 
    <!-- sweet alert -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>

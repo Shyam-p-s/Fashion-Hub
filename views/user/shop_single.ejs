@@ -19,8 +19,23 @@
 
     <link rel="stylesheet" href="/user_assets/css/style.css">
 
+
+
     <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <style>
+      .carousel-image {
+        max-height: 300px;
+        object-fit: contain;
+      }
+
+      /* Custom CSS to change the color of the carousel control icon */
+        .carousel-control-prev .carousel-control-prev-icon,
+        .carousel-control-next .carousel-control-next-icon {
+          color: black !important;
+        }
+      </style>
     
   </head>
   <body>
@@ -131,49 +146,68 @@
       </div>
     </div>  
 
-    <div class="site-section">
+   
+
+    <!-- new -->
+    <div class="site-section  bg-white">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
-            <img src="/<%= product.image %>" alt="Image" class="img-fluid">
-          </div>
-          <div class="col-md-6">
-            <h2 class="text-black"><%= product.name %></h2>
-            <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, vitae, explicabo? Incidunt facere, natus soluta dolores iusto! Molestiae expedita veritatis nesciunt doloremque sint asperiores fuga voluptas, distinctio, aperiam, ratione dolore.</p> -->
-            <p class="mb-4"><%= product.description %></p>
-            <p><strong class="text-primary h4">₹<%= product.price %></strong></p>
-            <!-- <div class="mb-1 d-flex">
-              <label for="option-sm" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-sm" name="shop-sizes"></span> <span class="d-inline-block text-black">Small</span>
-              </label>
-              <label for="option-md" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-md" name="shop-sizes"></span> <span class="d-inline-block text-black">Medium</span>
-              </label>
-              <label for="option-lg" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-lg" name="shop-sizes"></span> <span class="d-inline-block text-black">Large</span>
-              </label>
-              <label for="option-xl" class="d-flex mr-3 mb-3">
-                <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xl" name="shop-sizes"></span> <span class="d-inline-block text-black"> Extra Large</span>
-              </label>
-            </div> -->
-            <!-- <div class="mb-5">
-              <div class="input-group mb-3" style="max-width: 120px;">
-              <div class="input-group-prepend">
-                <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
+          <div class="col-md-6 stretch-card">
+            <div
+              id="carouselExample-cf"
+              class="carousel carousel-dark slide carousel-fade"
+              data-bs-ride="carousel"
+            >
+              <ol class="carousel-indicators">
+                <% for(let i = 0; i < product.image.length; i++) { %>
+                  <% if(i === 0) { %>
+                    <li data-bs-target="#carouselExample-cf" data-bs-slide-to="0" class="active"></li>
+                  <% } else { %>
+                    <li data-bs-target="#carouselExample-cf" data-bs-slide-to="<%= i %>"></li>
+                  <% } %>
+                <% } %>
+              </ol>
+        
+              <div class="carousel-inner bg-light">
+                <% for(let i = 0; i < product.image.length; i++) { %>
+                  <% if(i === 0) { %>
+                    <div class="carousel-item active easyzoom easyzoom--overlay">
+                  <% } else { %>
+                    <div class="carousel-item easyzoom easyzoom--overlay">
+                  <% } %>
+                      <img src="/<%= product.image[i] %>" alt="Image" class="mainimage d-block w-100 img-fluid border border-light carousel-image">
+                    </div>
+                <% } %>
               </div>
-              <input type="text" class="form-control text-center" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-              </div>
+        
+              <a class="carousel-control-prev" href="#carouselExample-cf" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
+                <span class="visually-hidden" style="color: black;">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselExample-cf" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden" style="color: black;">Next</span>
+              </a>
             </div>
-
-            </div> -->
-            <p><a href="/addToCart/<%= product._id %>" class="buy-now btn btn-sm btn-primary" id="addToCartButton">Add To Cart</a></p>
-
+          </div>
+        
+          <div class="col-md-6">
+            <h2 class="text-black product-name" title="<%= product.name %>"><%= product.name %></h2>
+            <p class=""><%= product.description %></p>
+            <p class="mb-4"></p>
+            <p><strong class="text-primary h4"> ₹ <%= product.price %></strong></p>
+            <div class="mb-5"></div>
+        
+            <div class="d-flex">
+              <p><a href="/addToCart/<%= product._id %>" class="buy-now btn btn-sm btn-primary" id="addToCartButton">Add To Cart</a></p>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
+
+    <!-- new -->
 
 
 
@@ -328,6 +362,11 @@
       </div>
     </footer>
   </div>
+
+  <!-- for carousel -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- for carousel -->
 
   <script src="/user_assets/js/jquery-3.3.1.min.js"></script>
   <script src="/user_assets/js/jquery-ui.js"></script>

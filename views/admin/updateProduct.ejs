@@ -31,6 +31,10 @@
 
     <!-- Template Stylesheet -->
     <link href="/admin_assets/css/style.css" rel="stylesheet">
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head> 
 <%- include('partials/sidebar') %>
 
@@ -41,18 +45,18 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Update Product</h6>
-                <form method="post" action="/updateProduct/<%= product_data._id %>" enctype="multipart/form-data">
+                <form method="post" action="/updateProduct/<%= product_data._id %>" enctype="multipart/form-data" onsubmit="return validateForm()">
                     
                         <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" value="<%= product_data.name %>" name="name"
+                            <label for="exampleInputName" class="form-label">Product name</label>
+                            <input type="text" class="form-control" id="exampleInputName" value="<%= product_data.name %>" name="name"
                                 placeholder="text" aria-describedby="emailHelp">
                            
                         </div>
                         <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Price</label>
+                            <label for="exampleInputPrice" class="form-label">Price</label>
                             <input type="text" class="form-control" name="price" value="<%= product_data.price %>" 
-                              placeholder="number"id="exampleInputPassword1">
+                              placeholder="number"id="exampleInputPrice">
                         </div>
                         
                         
@@ -66,14 +70,17 @@
                             
                         </select>
                         <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Description</label>
-                            <input type="text" class="form-control" name="description" value="<%= product_data.description %>" id="exampleInputPassword1">
+                            <label for="exampleInputDescription" class="form-label">Description</label>
+                            <input type="text" class="form-control" name="description" value="<%= product_data.description %>" id="exampleInputDescription">
                         </div>
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Choose the image</label>
-                            <input class="form-control" name="image" type="file"  id="formFile" >
-                             <img src="/<%= product_data.image %>" width="70px" alt="img" class="img-thumbnail mt-3">
+                            <input class="form-control" name="image" type="file" multiple id="formFile" onchange="viewImage(event)">
+                            <% for (let i = 0; i < product_data.image.length; i++) { %>
+                                <img src="/<%= product_data.image[i] %>" width="70px" alt="img" id="imgView<%= i %>" class="img-thumbnail mt-3">
+                            <% } %>
                         </div>
+                        
                        
                     
                     
@@ -83,6 +90,25 @@
         </div>
    </div>
     <!-- form -->
+
+    <script>
+        function viewImage(event) {
+            const imgView = document.getElementById('imgView');
+            imgView.innerHTML = ''; // Clear previous images
+    
+            for (let i = 0; i < event.target.files.length; i++) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(event.target.files[i]);
+                img.width = '70px';
+                img.alt = 'img';
+                img.className = 'img-thumbnail mt-3';
+                img.id = 'imgView' + i; // Generate unique ID for each image element
+                imgView.appendChild(img);
+            }
+        }
+    </script>
+    
+    
 
 
 </div>
@@ -100,6 +126,37 @@
 <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
+
+<script>
+    function validateForm() {
+        var productName = document.getElementById("exampleInputName").value;
+        var price = parseFloat(document.getElementById("exampleInputPrice").value);
+
+        if (!/^[A-Z]/.test(productName)) {
+            // Show SweetAlert error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Product Name',
+                text: 'Product name should start with a capital letter.',
+            });
+
+            return false;
+        }
+
+        if (price <= 0 || isNaN(price)) {
+            // Show SweetAlert error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Price',
+                text: 'Price should be a positive number.',
+            });
+
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

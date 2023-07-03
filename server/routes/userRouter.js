@@ -33,7 +33,7 @@ route.get('/orderReturned/:id', middleware.isLoggedIn, user_controller.return_or
 route.get('/user/profile', middleware.isLoggedIn, user_controller.user_profile)
 route.post('/user/profile', middleware.isLoggedIn, user_controller.update_profile)
 route.get('/paypal-success/:id', user_controller.paypal_success)
-route.get('/paypal-err', user_controller.paypal_err)
+route.get('/paypal-err/:id', user_controller.paypal_err)
 route.post("/redeem_coupon",middleware.isLoggedIn, user_controller.redeemCoupon)
 route.get('/wallet',middleware.isLoggedIn,user_controller.wallet_page )
 route.put('/wallet-pay',middleware.isLoggedIn,user_controller.walletPay )
