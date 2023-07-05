@@ -332,10 +332,10 @@ exports.incrementQuantity = async(req, res) =>{
             items.productId.equals(cartId)
             );
   
-        console.log(cartIndex);
+      
         userCart.products[cartIndex].quantity += 1;
         let result = await userCart.save();
-        // console.log(result);
+       
        
         
         const total = userCart.products[cartIndex].quantity *
@@ -530,11 +530,11 @@ exports.confirm_order = async (req, res) => {
       const userId = req.session.user?._id;
 
       const addressId = req.params.id;
-      // console.log("id is", addressId);
+     
       const payment = req.body.payment;
       console.log(payment);
       const currentUser = await users.findById(userId);
-      console.log("currentUser is", currentUser);
+      
   
       if (!currentUser) {
         return res.status(404).send('User not found');
@@ -571,7 +571,7 @@ exports.confirm_order = async (req, res) => {
         };
       });
   
-      console.log('items are',items);
+      
       let totalPrice = 0;
       items.forEach((item) => {
         totalPrice += item.price * item.quantity;
@@ -707,7 +707,7 @@ exports.confirm_order = async (req, res) => {
         }
       } else {
     
-        // console.log(JSON.stringify(payment));
+     
         req.session.user = user;
         const userCart = await cart.findOne({ userId: userId }).populate('products.productId');
         const count = userCart ? userCart.products.length : null;
@@ -772,9 +772,7 @@ exports.confirm_order = async (req, res) => {
          const count = userCart ? userCart.products.length : null;
 
         const orderedProducts = singleOrder.items;
-        console.log('ordered product is', orderedProducts);
-
-        console.log('single order is',singleOrder );
+  
         if(singleOrder){
           res.render('user/singleOrderPg',{orders : singleOrder, user, orderedProducts, count})
         }else{
@@ -878,7 +876,7 @@ exports.cancel_order = async (req, res) => {
     const Name = req.body.name;
     const Email = req.body.email;
     const Phone = req.body.phone
-    console.log(req.body);
+  
     const updatedUser = await users.findByIdAndUpdate(id,
         {name : Name,
          email : Email,
@@ -1082,7 +1080,7 @@ exports.cancel_order = async (req, res) => {
         });
         await newWishlist.save(); // <--- Use save() on the newWishlist object
         newWishlist.product.push(productId);
-        console.log('new wishlist is', newWishlist);
+     
         userWishlist = newWishlist;
       } else {
         const productExisted = userWishlist.product.includes(productId);
@@ -1092,7 +1090,7 @@ exports.cancel_order = async (req, res) => {
           }
         userWishlist.product.push(productId);
         console.log('product added to wishlist');
-        console.log(userWishlist);
+      
       }
   
       // Save the changes to the userWishlist
@@ -1114,7 +1112,7 @@ exports.cancel_order = async (req, res) => {
        const userCart = await cart.findOne({userId : userId})
        const count = userCart ? userCart.products.length : null;
       if(userWishlist){
-        console.log("bbbbbbbbbbbb",userWishlist.product);
+     
         res.render('user/wishlist',{user, userWishlist : userWishlist.product, count})
       }else{
         res.render('user/wishlist',{user, count})
@@ -1140,7 +1138,7 @@ exports.cancel_order = async (req, res) => {
 
             if(deletedItem){
               console.log('Item deleted successfully');
-              console.log(deletedItem);
+             
               res.redirect('/wishlist')
             }
 

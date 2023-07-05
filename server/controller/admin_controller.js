@@ -47,7 +47,7 @@ exports.admin_Login = async (req,res) => {
                   status: "Delivered",
                 })
                 .exec();
-                console.log('todaySales',todaySales);
+             
     
                 const totalsales = await order.countDocuments({ status: "Delivered" });
     
@@ -107,7 +107,7 @@ exports.admin_Login = async (req,res) => {
                     },
                   ]);
     
-                  console.log('salesCountByMonth is',salesCountByMonth);
+                  
 
                  const salesRevenueByMonth = await order.aggregate([
                     {
@@ -135,7 +135,7 @@ exports.admin_Login = async (req,res) => {
                 
                  ])
 
-                 console.log('salesRevenueByMonth is',salesRevenueByMonth);
+              
     
         res.render('admin/adminIndex', {
             todaySales,
@@ -935,7 +935,7 @@ exports.update_banner = async (req,res) =>{
         const id = req.params.id;
         const banner = await banners.findById(id);
         if(banner){
-            console.log('banner is ',banner);
+           
             res.render('admin/editBanner',{banner})
         }else{
             res.send('can not get banner details')
@@ -953,8 +953,7 @@ exports.updateBanner = async (req,res) =>{
         let newImages = [];
 
         if (req.files && req.files.length > 0) {
-            // newImages = req.files.map((file) => file.filename);
-      
+           
             if (req.body.image) {
               try {
                 fs.unlinkSync("./uploads/" + req.body.image); // Delete the old image file
@@ -965,7 +964,6 @@ exports.updateBanner = async (req,res) =>{
 
             // Crop and save the new images
              for (const file of req.files) {
-            //   const newImage = file.filename;
             const newImage = `${file.fieldname}_${Date.now()}_${file.originalname}`;
       
               // Perform image cropping
