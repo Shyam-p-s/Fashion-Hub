@@ -4,12 +4,14 @@ const category = require('../model/category_schema')
 const users =require('../model/userSchema')
 const order = require("../model/orderSchema")
 const fs = require('fs');
-const { log } = require('console');
+const { log, Console } = require('console');
 const paypal = require('paypal-rest-sdk');
 const coupons = require('../model/couponSchema')
 const wallets = require('../model/walletSchema')
 const multer = require('multer');
-const sharp = require('sharp')
+const sharp = require('sharp');
+const banners = require('../model/bannerSchema');
+
 
 //getting admin index
 exports.admin_Login = async (req,res) => {
@@ -827,6 +829,192 @@ exports.FilterbyDates = async(req,res) =>{
         console.log(error);
         res.status(500).send({message : error.message || "Unable filter sales report"})
     }
+}
+
+//banner management
+
+//getting banner page
+exports.banner = async(req,res) =>{
+    try{
+        const bannerData = await banners.find()
+        if(bannerData){
+            res.render('admin/banners',{bannerData})
+        }else{
+            console.log('Can not find banners list');
+        }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while getting banner page'})
+}
+}
+
+//getting add banner page
+exports.add_banner = (req,res) => {
+    try{
+        res.render('admin/addBanner');
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while getting add-banner page'})
+}
+}
+
+//adding banner
+exports.adding_banner = async(req, res) =>{
+    try{
+        const banner = new banners({
+            heading : req.body.heading,
+            subHeading : req.body.subHeading,
+        })
+
+        const croppedImages = [];
+        for (const file of req.files) {
+            const croppedImage = `cropped_${file.filename}`;
+        
+            await sharp(file.path)
+              .resize(1900, 890, { fit: "cover" })
+              .toFile(`uploads/${croppedImage}`);
+        
+            croppedImages.push(croppedImage);
+          }
+
+          banner.image = croppedImages;
+          await banner.save();
+          res.redirect('/banner')
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while adding banner'})
+       
+
+}
+}
+
+//activate banner
+
+exports.activate_banner = async (req, res) =>{
+    try{
+        const id = req.params.id;
+        const activateBanner = await banners.findByIdAndUpdate(
+            id,
+            {status : true},
+            {new : true}
+        );
+        if(activateBanner){
+            console.log("Banner activated");
+            res.redirect('/banner');
+        }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while activating banner'})
+}
+}
+
+//Deactivate banner
+
+exports.deactivate_banner = async (req, res) =>{
+    try{
+        const id = req.params.id;
+        const deactivateBanner = await banners.findByIdAndUpdate(
+            id,
+            {status : false},
+            {new : true}
+        );
+        if(deactivateBanner){
+            console.log("Banner deactivated");
+            res.redirect('/banner');
+        }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while deactivating banner'})
+}
+}
+
+//getting edit banner page
+
+exports.update_banner = async (req,res) =>{
+    try{
+        const id = req.params.id;
+        const banner = await banners.findById(id);
+        if(banner){
+            console.log('banner is ',banner);
+            res.render('admin/editBanner',{banner})
+        }else{
+            res.send('can not get banner details')
+        }
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while getting update banner page'})
+}
+}
+
+// updating banner
+exports.updateBanner = async (req,res) =>{
+    try{
+        const id = req.params.id;
+        let newImages = [];
+
+        if (req.files && req.files.length > 0) {
+            // newImages = req.files.map((file) => file.filename);
+      
+            if (req.body.image) {
+              try {
+                fs.unlinkSync("./uploads/" + req.body.image); // Delete the old image file
+              } catch (error) {
+                console.log(error);
+              }
+            }
+
+            // Crop and save the new images
+             for (const file of req.files) {
+            //   const newImage = file.filename;
+            const newImage = `${file.fieldname}_${Date.now()}_${file.originalname}`;
+      
+              // Perform image cropping
+              await sharp(file.path)
+                .resize({ width: 1900, height: 890 })
+                .toFile(`./uploads/${newImage}`);
+      
+                newImages.push(newImage);
+            }
+          } else {
+            newImages = req.body.image;
+          }
+
+          //updating banner
+          updatedBanner = await banners.findByIdAndUpdate(id,{
+            heading : req.body.heading,
+            subHeading : req.body.subHeading,
+            image: newImages
+          },{new : true})
+
+          if(updatedBanner){
+            console.log('Banner updated successfully');
+            res.redirect('/banner')
+          }else{
+            console.log('can not update banner')
+          }
+
+
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while updating banner'})
+}
+}
+
+//Delete banner
+exports.delete_banner = async(req,res)=>{
+    try{
+const id = req.params.id;
+const deleteBanner = await banners.findByIdAndRemove(id);
+if(deleteBanner){
+    console.log('Banner deleted');
+    res.redirect('/banner')
+}else{
+    console.log('Banner can not be deleted ');
+}
+    }catch (err) {
+        console.log(err);
+        res.render('admin/404error',{errMsg : err.message ||'error while deleting banner'})
+}
 }
 
 //category offer

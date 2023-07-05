@@ -17,6 +17,11 @@
                     <%= msg %>
                 </div> 
                 <%}%>
+                <% if(!locals.categories || categories.length ==0) {%>
+                    <div class="container center">
+                      <h2 style="text-align: center;">Categories list is Empty</h2>
+                    </div>
+                     <%}else{%>
             <div class="table-responsive">
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
@@ -57,6 +62,7 @@
                 </table>
                
             </div>
+            <%} %>
         </div>
     </div>
     <!-- categories  -->

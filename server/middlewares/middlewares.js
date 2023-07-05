@@ -1,13 +1,13 @@
-
+const banners = require('../model/bannerSchema');
 
 
 //to check the user is logged in or not
-exports.isLoggedIn = (req,res,next)=>{
+exports.isLoggedIn = async (req,res,next)=>{
     if(req.session.user){
         next();
     }else{
-        
-        res.render('user/index');
+        const bannerData = await banners.find({status : true}).exec()
+        res.render('user/index',{bannerData});
     }
 }
 

@@ -13,6 +13,7 @@ const coupons = require('../model/couponSchema')
 const wallets = require('../model/walletSchema')
 const wishlists = require('../model/wishlistSchema')
 const mongoosePaginate = require('mongoose-paginate-v2');
+const banners = require('../model/bannerSchema');
 
 exports.homepage = async (req,res) =>{
         const user = req.session.user;
@@ -20,7 +21,9 @@ exports.homepage = async (req,res) =>{
         //finding cart count
         const userCart = await cart.findOne({userId : userId})
         const count = userCart ? userCart.products.length : null;
-        res.render('user/index',{user, count});
+        const bannerData = await banners.find({status : true}).exec()
+        
+        res.render('user/index',{user, count, bannerData});
 }
 
 exports.userLogin = (req,res)=>{
@@ -1124,7 +1127,7 @@ exports.cancel_order = async (req, res) => {
   }
   
 
-  //deleting wishlist itemsl
+  //deleting wishlist items
   exports.deleteWishlist = async(req,res) => {
     try{
       const user = req.session.user;

@@ -44,6 +44,7 @@ var upload = multer({
 }).array('image',5)
 
 
+
   
 
 
@@ -77,6 +78,15 @@ route.post('/editCoupon/:id', middleware.isAdminLoggedIn, admin_controller.edit_
 route.get('/refund/:id',middleware.isAdminLoggedIn,admin_controller.refund )
 route.get('/salesReport',middleware.isAdminLoggedIn,admin_controller.salesReport)
 route.post('/adminSalesReportFilter',middleware.isAdminLoggedIn,admin_controller.FilterbyDates)
+route.get('/banner',middleware.isAdminLoggedIn,admin_controller.banner)
+route.get('/addBanner',middleware.isAdminLoggedIn,admin_controller.add_banner)
+route.post('/addBanner',middleware.isAdminLoggedIn, upload, admin_controller.adding_banner);
+route.get('/activateBanner/:id',middleware.isAdminLoggedIn, admin_controller.activate_banner)
+route.get('/deactivateBanner/:id',middleware.isAdminLoggedIn, admin_controller.deactivate_banner)
+route.get('/editBanner/:id',middleware.isAdminLoggedIn, admin_controller.update_banner)
+route.post('/editBanner/:id',middleware.isAdminLoggedIn,upload, admin_controller.updateBanner)
+route.get('/deleteBanner/:id',middleware.isAdminLoggedIn, admin_controller.delete_banner)
+
 
 
 module.exports = route;

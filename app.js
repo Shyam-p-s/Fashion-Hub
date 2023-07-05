@@ -52,6 +52,7 @@ app.set('view engine','ejs')
 app.use(express.static(path.resolve(__dirname,"public")))
 app.use(express.static("uploads"));
 
+
 //loading routes
 app.use('/',userRouter);
 app.use('/',adminRouter);

@@ -70,6 +70,7 @@
                     <a href="/users" class="nav-item nav-link"><i class="fa-solid fa-users me-2"></i>Users</a>
                     <a href="/view_orders" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Orders</a>
                     <a href="/salesReport" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Sales report</a>
+                    <a href="/banner" class="nav-item nav-link"><i class="fa fa-keyboard "></i>Banners</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Coupons</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -189,6 +190,11 @@
                         <a class="btn btn-sm btn-primary mt-3 " href="/addproducts">Add Products</a>
                         <a href="">Show All</a>
                     </div>
+                    <% if(!locals.productData || productData.length ==0) {%>
+                        <div class="container center">
+                          <h2 style="text-align: center;">Products list is Empty</h2>
+                        </div>
+                         <%}else{%>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
@@ -233,6 +239,7 @@
                         </table>
                        
                     </div>
+                    <%} %>
                 </div>
             </div>
             <!-- Recent Sales End -->

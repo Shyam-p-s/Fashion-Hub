@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="admin_assets/img/favicon.ico" rel="icon">
+    <link href="/admin_assets/img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,9 @@
 
     <!-- Template Stylesheet -->
     <link href="/admin_assets/css/style.css" rel="stylesheet">
+
+
+
 </head>
 
 <body>
@@ -41,9 +44,6 @@
             </div>
         </div>
         <!-- Spinner End -->
-
-
-
 
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
@@ -65,7 +65,7 @@
                     <a href="/admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     
                     <a href="/viewproducts" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Products</a>
-                    <a href="/categories" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Categories</a>
+                    <a href="/categories" class="nav-item nav-link"><i class="fa fa-keyboard "></i>Categories</a>
                     <a href="/users" class="nav-item nav-link"><i class="fa-solid fa-users me-2"></i>Users</a>
                     <a href="/view_orders" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Orders</a>
                     <a href="/salesReport" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Sales report</a>
@@ -82,7 +82,7 @@
         </div>
         <!-- Sidebar End -->
 
-
+    
 <div class="content">
      <!-- Navbar Start -->
  <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
@@ -175,40 +175,59 @@
 <!-- Navbar End -->
 
 
-            <!-- form -->
-            <div class="row g-4">
-                <div class="col-sm-12 col-xl-6">
-                    <div class="bg-light rounded h-100 p-4">
-                        <h6 class="mb-4">Edit Category </h6>
+     <!-- form -->
+     <div class="row g-4">
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Edit Banner </h6>
+                <% if(locals.banner){%>
+                <form method="post" action="/editBanner/<%= banner._id %>" enctype="multipart/form-data">
+                    <% if (locals.msg) { %>
+                        <div class="alert alert-danger" role="alert" id="alert" >
+                            <%= msg %>
+                        </div> 
+                        <%}%>
+
+                        
+                    <div class="mb-3">
+                        <label for="heading" class="form-label">Heading</label>
+                        <input type="text" class="form-control" id="heading" value="<%= banner.heading %>" name="heading"
+                            aria-describedby="emailHelp" required>
                        
-                        <form method="post" action="/update_category/<%= data._id %>" >
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" name="category" value="<%= data.category %>"
-                                    aria-describedby="emailHelp">
-                               
-                            </div>
-                            <!-- new trial -->
-                            <div class="form-group mb-3">
-                                <label for="exampleFormControlTextarea1">Description</label>
-                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" value ="" rows="3"><%= data.description %></textarea>
-                              </div>
-                            
-                            
-                            <button type="submit" class="btn btn-primary">Add</button>
-                        </form>
-                      
                     </div>
-                </div>
-           </div>
-            <!-- form -->
-      
+                    <!-- new trial -->
+                    <div class="form-group mb-3">
+                        <label for="subHeading">Sub Heading</label>
+                        <textarea class="form-control" name="subHeading" id="subHeading" rows="3" " required><%= banner.subHeading %></textarea>
+                      </div>
 
-</div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Choose the image</label>
+                        <input class="form-control" name="image" type="file" id="formFile" >
+                        <% for (let i = 0; i < banner.image.length; i++) { %>
+                            <img src="/<%=  banner.image[i] %>" width="70px" alt="img" id="imgView<%= i %>" class="img-thumbnail mt-3">
+                        <% } %>
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+                <%} %>
+            </div>
+        </div>
+   </div>
+    <!-- form -->
 
 
- <!-- Back to Top -->
- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <script>
+        setTimeout(()=>{
+            document.getElementById("alert").style.display = "none";
+        },2000)
+     </script>
+
+    <!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
 
 <!-- JavaScript Libraries -->
@@ -225,3 +244,4 @@
 <!-- Template Javascript -->
 <script src="/admin_assets/js/main.js"></script>
 </body>
+</html>

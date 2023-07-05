@@ -8,23 +8,28 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Add Banner </h6>
-                <form method="post" action="/addBanner" >
+                <form method="post" action="/addBanner" enctype="multipart/form-data">
                     <% if (locals.msg) { %>
                         <div class="alert alert-danger" role="alert" id="alert" >
                             <%= msg %>
                         </div> 
                         <%}%>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" name="category"
+                        <label for="heading" class="form-label">Heading</label>
+                        <input type="text" class="form-control" id="heading" name="heading"
                             aria-describedby="emailHelp" required>
                        
                     </div>
                     <!-- new trial -->
                     <div class="form-group mb-3">
-                        <label for="exampleFormControlTextarea1">Description</label>
-                        <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                        <label for="subHeading">Sub Heading</label>
+                        <textarea class="form-control" name="subHeading" id="subHeading" rows="3" required></textarea>
                       </div>
+
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Choose the image</label>
+                        <input class="form-control" name="image" type="file" id="formFile"  required >
+                    </div>
                     
                     
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -36,7 +41,11 @@
 
 
 
-
+    <script>
+        setTimeout(()=>{
+            document.getElementById("alert").style.display = "none";
+        },2000)
+     </script>
 
     <!-- Back to Top -->
 <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
