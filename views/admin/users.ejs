@@ -18,7 +18,7 @@
                 </div>
                  <%}else{%>
             <div class="table-responsive">
-                <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <table id="orders-table" class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
                         <tr class="text-dark">
                             <th scope="col">Sl.No</th>
@@ -79,4 +79,25 @@
     
     <!-- Template Javascript -->
     <script src="admin_assets/js/main.js"></script>
+
+    
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.css">
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#orders-table').DataTable();
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    let navlinks = document.getElementsByClassName("nav-link");
+    for (var i = 0; i < navlinks.length; i++) {
+      if (navlinks[i].href === window.location.href) {
+        navlinks[i].className += " active";
+      }
+    }
+  });
+</script>
     </body>
