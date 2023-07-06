@@ -32,7 +32,7 @@ exports.userLogin = (req,res)=>{
 
 
 exports.userSignup = (req,res)=>{
-    res.render('user/signup');
+    res.render('user/signUp');
 }
 
 //Otp login
