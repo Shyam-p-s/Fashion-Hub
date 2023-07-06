@@ -27,7 +27,7 @@ exports.homepage = async (req,res) =>{
 }
 
 exports.userLogin = (req,res)=>{
-    res.render('user/login');
+    res.render('user/logIn');
 }
 
 
