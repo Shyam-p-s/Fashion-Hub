@@ -109,7 +109,9 @@
           
             <li><a href="/shop">Shop</a></li>
             <li><a href="/wallet">Wallet</a></li>
+            <% if(locals.user){%>
             <li><a href="/user/vieworders">Orders</a></li>
+            <%} %>
             <li><a href="/wishlist">Wishlist</a></li>
             
            

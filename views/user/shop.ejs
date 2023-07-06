@@ -1,6 +1,18 @@
 
 <!-- header section -->
 <%- include('partials/header') %>
+<style>
+
+    .product-name,
+    .product-details {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+     } 
+     
+</style>
+
  <!-- header section -->
   <!-- toastify -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -61,8 +73,8 @@
                     <a href="/shop/single/<%= products._id %>"><img src="<%=products.image[0] %>"  alt="Image placeholder" class="img-fluid"></a>
                   </figure>
                   <div class="block-4-text p-4">
-                    <h3><a href="/shop/single/<%= products._id %>"><%= products.name %></a></h3>
-                    <p class="mb-0"><%= products.description %></p>
+                    <h3 class="product-name"><a href="/shop/single/<%= products._id %>"><%= products.name %></a></h3>
+                    <p class="mb-0 product-details"><%= products.description %></p>
                     <p class="text-primary font-weight-bold">₹<%= products.price %></p>
                     <a href="" title="add to Wishlist" id="addToWishlist" onclick="addToWishlist(event,'<%=products._id  %>', '<%= products.name %>')"><span class="icon icon-heart-o"></span></a>
                   </div>
