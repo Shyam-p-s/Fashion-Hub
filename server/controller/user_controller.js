@@ -626,8 +626,8 @@ exports.confirm_order = async (req, res) => {
             intent: "sale",
             payer: { payment_method: "paypal" },
             redirect_urls: {
-              return_url: `http://localhost:5000/paypal-success/${userId}`,
-              cancel_url: `http://localhost:5000/paypal-err/${userId}`,
+              return_url: `http://efashionhub.shop/paypal-success/${userId}`,
+              cancel_url: `http://efashionhub.shop/paypal-err/${userId}`,
             },
             transactions: [ 
               {
