@@ -73,7 +73,7 @@ exports.createUser = async (req,res)=>{
         userdata.save()
         .then(()=>{
             let msg = "Registered Successfully"
-            res.render('user/login',{msg})
+            res.render('user/logIn',{msg})
         })
         .catch((err) => {
                 res.status(500).send({
@@ -94,7 +94,7 @@ exports.find_user = async (req,res) => {
         const user = await users.findOne({email : email})
         if(user){
             if(user.isBlocked){
-                return res.render('user/login',{messsage: "User is blocked"})
+                return res.render('user/logIn',{messsage: "User is blocked"})
             }
             const isMatch = await bcrypt.compare(password,user.password) 
             if (isMatch) {
@@ -103,12 +103,12 @@ exports.find_user = async (req,res) => {
                res.redirect('/');
 
             }else{
-                res.render('user/login',{messsage: "Password is incorrect"})
+                res.render('user/logIn',{messsage: "Password is incorrect"})
             }
            
                 
         }else{
-            res.render('user/login',{messsage : "User not found. Please register"})
+            res.render('user/logIn',{messsage : "User not found. Please register"})
         }
     }catch(err){
         console.log(err);
