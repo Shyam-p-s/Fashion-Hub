@@ -457,7 +457,13 @@ exports.edit_address = async(req, res) =>{
 
     }catch (err) {
       console.log(err);
-      res.render('user/user404',{errMsg : err.message ||'error while editing address'})
+      const user = req.session.user
+      const userId = req.session.user?._id
+        //finding cart count
+        const userCart = await cart.findOne({userId : userId})
+        const count = userCart ? userCart.products.length : null;
+      
+      res.render('user/user404',{user, count,errMsg : err.message ||'error while editing address'})
      
 
 }
