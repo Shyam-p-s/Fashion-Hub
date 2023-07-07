@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>Admin-FashionHub</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -200,7 +200,7 @@
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">₹<%= revenue %></h6>
+                                <h6 class="mb-0">₹<%= revenue.toFixed(0) %></h6>
                             </div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">₹<%=Revenue  %></h6>
+                                <h6 class="mb-0">₹<%=Revenue.toFixed(0)  %></h6>
                             </div>
                         </div>
                     </div>
@@ -310,7 +310,8 @@
             March: 0,
             April: 0,
             May: 0,
-            June: 0
+            June: 0,
+            July: 0
             };
 
             salesCountByMonth.forEach((monthData) => {
@@ -334,6 +335,9 @@
                 case 6:
                 salesCountByMonthObj.June = count;
                 break;
+                case 7:
+                salesCountByMonthObj.July = count;
+                break;
                 default:
                 break;
             }
@@ -345,6 +349,7 @@
             const salesCountApril = salesCountByMonthObj.April;
             const salesCountMay = salesCountByMonthObj.May;
             const salesCountJune = salesCountByMonthObj.June;
+            const salesCountJuly = salesCountByMonthObj.July;
             console.log(salesCountJan,salesCountFeb,salesCountMarch,salesCountJune)
             // Access the chart labels and data passed from the route
  
@@ -365,7 +370,8 @@
             March: 0,
             April: 0,
             May: 0,
-            June: 0
+            June: 0,
+            July: 0
             };
 
             salesRevenueByMonth.forEach((monthData) => {
@@ -389,6 +395,9 @@
                 case 6:
                 salesRevenueByMonthObj.June = revenue;
                 break;
+                case 7:
+                salesRevenueByMonthObj.July = revenue;
+                break;
                 default:
                 break;
             }
@@ -400,6 +409,7 @@
             const salesRevenueApril = salesRevenueByMonthObj.April;
             const salesRevenueMay = salesRevenueByMonthObj.May;
             const salesRevenueJune = salesRevenueByMonthObj.June;
+            const salesRevenueJuly = salesRevenueByMonthObj.July;
             console.log(salesRevenueJan ,salesRevenueJan ,salesRevenueJan ,salesRevenueJune)
 
 
@@ -434,16 +444,16 @@
     var myChart2 = new Chart(document.getElementById('salse-revenue'), {
         type: "line",
         data: {
-            labels: ["jan","feb","march","april","may","june"],
+            labels: ["jan","feb","march","april","may","june","july"],
             datasets: [{
                     label: "Sales",
-                    data: [ salesCountJan,salesCountFeb,salesCountMarch,salesCountApril,salesCountMay,salesCountJune],
+                    data: [ salesCountJan,salesCountFeb,salesCountMarch,salesCountApril,salesCountMay,salesCountJune,salesCountJuly],
                     backgroundColor: "rgba(0, 156, 255, .5)",
                     fill: true
                 },
                 {
                     label: "Revenue",
-                    data: [salesRevenueJan, salesRevenueFeb, salesRevenueMarch, salesRevenueApril, salesRevenueMay, salesRevenueJune],
+                    data: [salesRevenueJan, salesRevenueFeb, salesRevenueMarch, salesRevenueApril, salesRevenueMay, salesRevenueJune,salesRevenueJuly],
                     backgroundColor: "rgba(0, 156, 255, .3)",
                     fill: true
                 }
@@ -463,12 +473,12 @@
     var myChart3 = new Chart(ctx3, {
         type: "line",
         data: {
-            labels: ["jan","feb","march","april","may","june"],
+            labels: ["jan","feb","march","april","may","june","july"],
             datasets: [{
                 label: "Sales",
                 fill: false,
                 backgroundColor: "rgba(0, 156, 255, .3)",
-                data: [ salesCountJan,salesCountFeb,salesCountMarch,salesCountApril,salesCountMay,salesCountJune],
+                data: [ salesCountJan,salesCountFeb,salesCountMarch,salesCountApril,salesCountMay,salesCountJune,salesCountJuly],
             }]
         },
         options: {
