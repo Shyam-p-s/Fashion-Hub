@@ -455,10 +455,12 @@ exports.edit_address = async(req, res) =>{
         res.redirect('/checkout');
         // const address = await users.findOne({_id :userId},{address : {$elemMatch : {_id  : id}}})
 
-    }catch(error){
-        console.log(error);
-        res.status(500).send({message:error || "some error occured while loading checkout page"}) 
-    }
+    }catch (err) {
+      console.log(err);
+      res.render('user/user404',{errMsg : err.message ||'error while editing address'})
+     
+
+}
     
     
 }
