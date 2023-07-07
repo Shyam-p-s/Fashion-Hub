@@ -1,9 +1,11 @@
 require('dotenv').config();
-const users =require('../model/userSchema')
+const users =require('../model/userSchema');
+const cart = require('../model/cartSchema');
+const banners = require('../model/bannerSchema');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const serviceSid = process.env.TWILIO_SERVICE_SID;
-const client = require('twilio')(accountSid, authToken)
+const client = require('twilio')(accountSid, authToken);
 
 //send otp
 exports.sendOTP = async (req, res, next) => {
@@ -53,11 +55,19 @@ exports.verifyOTP = async (req, res, next) =>{
           if (verification_check.status === 'approved') {
              // If the verification is successful,
              const user = await users.findOne({phone : phoneNumber });
-             console.log(user);
-             req.session.user =user
-             res.render('user/index',{user})
+             
+             req.session.user =user;
+             const userId = req.session.user?._id
+              //finding cart count
+                const userCart = await cart.findOne({userId : userId})
+                const count = userCart ? userCart.products.length : null;
+                const bannerData = await banners.find({status : true}).exec()
+                
+                res.render('user/index',{user, count, bannerData});
+}
+             
 
-          }else{
+          else{
             // If the verification fails, return an error message
             return res.render('user/otpLogin',{message : "otp verification failed"});
           }
